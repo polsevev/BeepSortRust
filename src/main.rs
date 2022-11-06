@@ -13,6 +13,7 @@ use crate::GuiHookVec::GuiVec;
 use crate::StateMover::State;
 use std::ops::{Generator, GeneratorState};
 
+
 const BAR_WIDTH:f32 = 10.0;
 #[macroquad::main("BeepSort")]
 async fn main() {
@@ -26,7 +27,7 @@ async fn main() {
 
 
     loop {
-        if get_time()-lasttime > 1.0 && !finished{
+        if get_time()-lasttime > 0.005 && !finished{
             match Pin::new(& mut generator).resume(()){
                 GeneratorState::Yielded(x) => {
                     holder = x.clone();

@@ -4,7 +4,7 @@ use crate::GuiHookVec::GuiVec;
 use std::ops::{Generator, GeneratorState};
 use std::rc::Rc;
 use std::thread::yield_now;
-
+use beep::beep;
 #[derive(Debug, Clone)]
 pub struct Algorithm{
     name:String,
@@ -19,12 +19,15 @@ impl Algorithm {
     pub fn sort<'a>(&'a self, list: &'a mut GuiVec) -> impl Generator<Yield=GuiVec, Return=()> +'a{
         move ||{
             yield list.clone();
-            list.swap(1, 10);
-            yield list.clone();
-            list.swap(5, 15);
-            yield list.clone();
-            list.randomize();
-            yield list.clone();
+
+            for index in 0..list.clone().len(){
+                let mut j = index;
+                while j>0 && list.get(j-1).position > list.get(j).position{
+                    list.swap(j, j-1);
+                    yield list.clone();
+                    j = j-1;
+                }
+            }
         }
     }
 

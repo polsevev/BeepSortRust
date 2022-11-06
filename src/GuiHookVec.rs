@@ -22,7 +22,7 @@ pub struct GuiVec{
 impl GuiVec{
     pub fn new(length:i32) -> Self {
         let mut list:Vec<Bar> = vec!();
-        for i in 0..length {
+        for i in 1..length+1 {
             list.push(Bar::new(i));
         }
         GuiVec{list, initialSize:length as usize, lastTime: 0.0 , algo:Algorithm::new()}

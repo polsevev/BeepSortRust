@@ -7,6 +7,6 @@ edition = "2021"
 
 [dependencies]
 macroquad = "0.3.25"
-
+beep = "0.3.0"
 [toolchain]
 channel = "nightly"
