@@ -30,7 +30,7 @@ impl GuiVec{
         let barHeightStep = (screen_height/((length) as f32));
         let mut list:Vec<Bar> = vec!();
         for i in 1..length+1 {
-            list.push(Bar::new(barWidth, barHeightStep*(i as f32) ,i));
+            list.push(Bar::new(i));
         }
         GuiVec{list, initialSize:length as usize, lastTime: 0.0 ,  reads:0, writes:0, comps:0, screen_height, screen_width}
     }
@@ -38,7 +38,7 @@ impl GuiVec{
     pub fn draw(&self){
         let mut count = 0;
         for bar in  &self.list{
-            draw_rectangle(screen_width() * ((count as f32)/(self.initialSize as f32)), (screen_height()-bar.height)-50., screen_width()/((self.len()) as f32), (screen_height()/((self.len()) as f32))*bar.position as f32 * 4., bar.color);
+            draw_rectangle(screen_width() * ((count as f32)/(self.initialSize as f32)),screen_height() - (screen_height()/((self.len()) as f32))*bar.position as f32 , screen_width()/((self.len()) as f32), (screen_height()/((self.len()) as f32))*bar.position as f32, bar.color);
             count += 1;
         }
     }

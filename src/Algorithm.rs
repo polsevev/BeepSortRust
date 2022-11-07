@@ -85,4 +85,38 @@ impl Algorithm{
         }
     }
 
+    pub fn cocktailShaker(length:i32) -> impl Generator<Yield=GuiVec, Return=()>{
+        let mut list = GuiVec::new(screen_width(), screen_height(), length);
+        list.randomize();
+        move || {
+            let mut lowerBound = 0;
+            let mut upperBound = list.len()-1;
+            let mut swapped = true;
+            while swapped{
+                swapped = false;
+                for i in lowerBound..upperBound {
+                    if list.lessThan(i+1, i) {
+                        yield list.swap(i+1, i);
+                        swapped = true;
+                    }
+                }
+                if !swapped{
+                    break;
+                }
+                swapped = false;
+                upperBound = upperBound-1;
+                for i in ((lowerBound)..(upperBound-1)).rev() {
+                    if list.lessThan(i+1, i) {
+                        yield list.swap(i+1, i);
+                        swapped = true;
+                    }
+                }
+
+                lowerBound = lowerBound+1;
+            }
+
+        }
+
+    }
+
 }
