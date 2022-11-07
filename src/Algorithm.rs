@@ -2,6 +2,7 @@
 use crate::BarPlugin::Bar;
 use crate::GuiHookVec::GuiVec;
 use std::ops::{Generator, GeneratorState};
+use std::pin::Pin;
 use std::rc::Rc;
 use std::thread::yield_now;
 use macroquad::prelude::screen_width;
@@ -12,7 +13,26 @@ pub struct Algorithm{
 
 }
 
-impl Algorithm {
+pub enum AlgoEnum{
+    InsertSort(Box<dyn Generator<Yield=GuiVec, Return=()>>),
+}
+
+impl Algorithm{
+
+    pub fn start(length:i32, algorithm:u32) -> impl Generator<Yield=GuiVec, Return=()>{
+            move ||{
+                let mut generator = Algorithm::insertSort(length);
+
+                match Pin::new(&mut generator).resume(()) {
+                    GeneratorState::Yielded(x) => {
+                        yield x
+                    },
+                    GeneratorState::Complete(x) => {
+                    }
+                }
+            }
+
+    }
 
     pub fn insertSort(length:i32) -> impl Generator<Yield=GuiVec, Return=()>{
         let mut list = GuiVec::new(screen_width(), screen_height(), length);
@@ -23,7 +43,6 @@ impl Algorithm {
                 let mut j = index;
                 while j>0 && list.lessThan(j, j-1){
                     yield list.swap(j, j-1);
-
                     j = j-1;
                 }
             }
