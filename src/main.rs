@@ -18,17 +18,7 @@ use crate::Algorithm::AlgoEnum;
 
 #[macroquad::main("BeepSort")]
 async fn main() {
-
-
-
-
-
-    let mut finished = false;
-
     let mut length = 100;
-
-
-
 
     loop{
         clear_background(WHITE);

@@ -19,21 +19,6 @@ pub enum AlgoEnum{
 
 impl Algorithm{
 
-    pub fn start(length:i32, algorithm:u32) -> impl Generator<Yield=GuiVec, Return=()>{
-            move ||{
-                let mut generator = Algorithm::insertSort(length);
-
-                match Pin::new(&mut generator).resume(()) {
-                    GeneratorState::Yielded(x) => {
-                        yield x
-                    },
-                    GeneratorState::Complete(x) => {
-                    }
-                }
-            }
-
-    }
-
     pub fn insertSort(length:i32) -> impl Generator<Yield=GuiVec, Return=()>{
         let mut list = GuiVec::new(screen_width(), screen_height(), length);
         list.randomize();
