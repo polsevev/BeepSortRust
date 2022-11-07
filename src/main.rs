@@ -16,11 +16,11 @@ use std::ops::{Generator, GeneratorState};
 const BAR_WIDTH:f32 = 10.0;
 #[macroquad::main("BeepSort")]
 async fn main() {
-    let mut gui_vec = GuiVec::new(50);
+    let mut gui_vec = GuiVec::new(5);
     gui_vec.randomize();
     let mut lasttime:f64 = 0.;
     let mut holder = gui_vec.clone();
-    let mut generator = Algorithm::Algorithm::insertSort(&mut gui_vec);
+    let mut generator = Algorithm::Algorithm::bogoSort(&mut gui_vec);
     let mut finished = false;
     let timeout = 0.000001;
 

@@ -48,4 +48,30 @@ impl Algorithm {
         }
     }
 
+    pub fn bubbleSort<'a>(list: &'a mut GuiVec) -> impl Generator<Yield=GuiVec, Return=()> +'a {
+        move || {
+            let n = list.len();
+            for i in 0..n {
+                for j in 0..(n - i - 1) {
+                    if list.lessThan(j + 1, j) {
+                        yield list.swap(j, j + 1);
+                    }
+                }
+            }
+        }
+    }
+
+    pub fn bogoSort<'a>(list: &'a mut GuiVec) -> impl Generator<Yield=GuiVec, Return=()> +'a{
+        move || {
+            loop{
+                yield list.clone();
+                if list.isSorted() {
+                    break;
+                }
+                list.randomize();
+            }
+
+        }
+    }
+
 }

@@ -86,5 +86,17 @@ impl GuiVec{
         self.comps += 1;
         return self.get(a).position < self.get(b).position
     }
+    pub fn isSorted(&mut self) -> bool{
+        self.reads += self.len() as i32;
+        let mut prev = 0;
+        for bar in self.list.iter() {
+            if bar.position < prev{
+                return false;
+            }else{
+                prev = bar.position;
+            }
+        }
+        true
+    }
 }
 
