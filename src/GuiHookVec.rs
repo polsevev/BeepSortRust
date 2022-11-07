@@ -20,34 +20,34 @@ pub struct GuiVec{
     pub reads:i32,
     pub writes:i32,
     pub comps:i32,
+    screen_height:f32,
+    screen_width:f32
 }
 
 impl GuiVec{
-    pub fn new(length:i32) -> Self {
+    pub fn new(screen_width:f32, screen_height:f32,length:i32) -> Self {
+        let barWidth = (screen_width/((length) as f32)) - 1_f32;
+        let barHeightStep = (screen_height/((length) as f32));
         let mut list:Vec<Bar> = vec!();
         for i in 1..length+1 {
-            list.push(Bar::new(i));
+            list.push(Bar::new(barWidth, barHeightStep*(i as f32) ,i));
         }
-        GuiVec{list, initialSize:length as usize, lastTime: 0.0 , algo:Algorithm::new(), reads:0, writes:0, comps:0}
+        GuiVec{list, initialSize:length as usize, lastTime: 0.0 , algo:Algorithm::new(), reads:0, writes:0, comps:0, screen_height, screen_width}
     }
 
     pub fn draw(&self){
         let mut count = 0;
         for bar in  &self.list{
-            draw_rectangle(screen_width() * ((count as f32)/(self.initialSize as f32)), screen_height()-(200.+ (bar.position as f32 * 10.0)), bar.width, bar.height, bar.color);
+            draw_rectangle(screen_width() * ((count as f32)/(self.initialSize as f32)), (screen_height()-bar.height)-50., screen_width()/((self.len()) as f32), (screen_height()/((self.len()) as f32))*bar.position as f32, bar.color);
             count += 1;
         }
     }
 
     pub fn resize(&mut self, length:i32){
-        self.list = GuiVec::new(length).list;
+        self.list = GuiVec::new(self.screen_width, self.screen_height,length).list;
     }
     pub fn len(&self) -> usize{
         self.list.len()
-    }
-    pub async fn push(&mut self){
-        self.list.push(Bar::new(self.initialSize as i32));
-        self.initialSize += 1;
     }
 
     pub fn pop(&mut self) -> Bar {

@@ -13,11 +13,11 @@ pub struct Bar {
 
 
 impl Bar{
-    pub fn new(position:i32) -> Self{
+    pub fn new(width:f32, height: f32,position:i32) -> Self{
 
         Bar{
-            width: 10.0,
-            height: position as f32 *10.0,
+            width: width,
+            height: height,
             position,
             color:Color::from_rgba(rand::gen_range(0, 255),rand::gen_range(0, 254),rand::gen_range(0, 255),255),
         }
