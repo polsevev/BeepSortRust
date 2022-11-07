@@ -4,26 +4,19 @@ use crate::GuiHookVec::GuiVec;
 use std::ops::{Generator, GeneratorState};
 use std::rc::Rc;
 use std::thread::yield_now;
+use macroquad::prelude::screen_width;
+use macroquad::window::screen_height;
+
 #[derive(Debug, Clone)]
 pub struct Algorithm{
-    name:String,
-}
-#[derive(PartialEq)]
-pub enum Algo{
-    InsertSort,
-    StalinSort,
-    BubbleSort,
-    BogoSort,
+
 }
 
 impl Algorithm {
 
-    pub fn new() -> Algorithm{
-        Algorithm{name:"Test".to_owned()}
-    }
-
-
-    pub fn insertSort<'a>(list: &'a mut GuiVec) -> impl Generator<Yield=GuiVec, Return=()> +'a{
+    pub fn insertSort(length:i32) -> impl Generator<Yield=GuiVec, Return=()>{
+        let mut list = GuiVec::new(screen_width(), screen_height(), length);
+        list.randomize();
         move ||{
             yield list.clone();
             for index in 0..list.len(){
@@ -37,7 +30,9 @@ impl Algorithm {
 
         }
     }
-    pub fn stalinSort<'a>(list: &'a mut GuiVec) -> impl Generator<Yield=GuiVec, Return=()> +'a{
+    pub fn stalinSort(length:i32) -> impl Generator<Yield=GuiVec, Return=()>{
+        let mut list = GuiVec::new(screen_width(), screen_height(), length);
+        list.randomize();
         move ||{
             yield list.clone();
             let mut cur = 1;
@@ -56,7 +51,9 @@ impl Algorithm {
         }
     }
 
-    pub fn bubbleSort<'a>(list: &'a mut GuiVec) -> impl Generator<Yield=GuiVec, Return=()> +'a {
+    pub fn bubbleSort(length:i32) -> impl Generator<Yield=GuiVec, Return=()>{
+        let mut list = GuiVec::new(screen_width(), screen_height(), length);
+        list.randomize();
         move || {
             let n = list.len();
             for i in 0..n {
@@ -69,7 +66,9 @@ impl Algorithm {
         }
     }
 
-    pub fn bogoSort<'a>(list: &'a mut GuiVec) -> impl Generator<Yield=GuiVec, Return=()> +'a{
+    pub fn bogoSort(length:i32) -> impl Generator<Yield=GuiVec, Return=()>{
+        let mut list = GuiVec::new(screen_width(), screen_height(), length);
+        list.randomize();
         move || {
             loop{
                 yield list.clone();
