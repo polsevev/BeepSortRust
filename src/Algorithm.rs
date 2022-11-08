@@ -7,6 +7,8 @@ use std::rc::Rc;
 use std::thread::yield_now;
 use macroquad::prelude::screen_width;
 use macroquad::window::screen_height;
+use std::collections::BinaryHeap;
+use std::collections::HashMap;
 
 #[derive(Debug, Clone)]
 pub struct Algorithm{
@@ -27,13 +29,11 @@ impl Algorithm{
             for index in 0..list.len(){
                 let mut j = index;
                 while j>0 && list.lessThan(j, j-1){
-                    yield list.swap(j, j-1);
-                    j = j-1;
+                    yield list.swap(j, j - 1);
+                    j -= 1;
                 }
 
             }
-
-
         }
     }
     pub fn stalinSort(length:i32) -> impl Generator<Yield=GuiVec, Return=()>{
@@ -119,6 +119,29 @@ impl Algorithm{
 
         }
 
+    }
+
+    pub fn binaryHeap(length:i32) -> impl Generator<Yield=GuiVec, Return=()>{
+        let mut list = GuiVec::new(screen_width(), screen_height(), length);
+        let mut indexMap:HashMap<i32, usize> = HashMap::new();
+        let mut binHeap:BinaryHeap<i32> = BinaryHeap::new();
+        list.randomize();
+        move || {
+            let mut ind = 0;
+            for bar in list.elements(){
+                binHeap.push(bar.position);
+                indexMap.insert(bar.position, ind);
+                ind += 1;
+            }
+            for i in (0..list.len()).rev(){
+                let bar = binHeap.pop().unwrap();
+                let barIndex = *indexMap.get(&bar).unwrap();
+                let clone = list.swap(i, barIndex);
+                let temp = list.get(barIndex).position;
+                indexMap.insert(temp, barIndex);
+                yield clone;
+            }
+        }
     }
 
 }
