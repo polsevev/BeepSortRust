@@ -25,6 +25,7 @@ async fn main() {
 
     loop{
         clear_background(WHITE);
+        draw_text("Sorting!", screen_width()*0.3, screen_height()*0.5, 100.0, GREEN);
         draw_text(format!("Length: {}", length.to_string()).as_str(), screen_width()*0.83, 30., 20.0, BLACK);
         if root_ui().button(Vec2::new(screen_width()*0.9, 50.), "+10"){
             length += 10;
