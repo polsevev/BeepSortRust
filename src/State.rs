@@ -4,6 +4,7 @@ use std::time::Instant;
 use macroquad::color::{BLACK, WHITE};
 use macroquad::math::Vec2;
 use macroquad::prelude::{clear_background, draw_text, get_fps, get_time, next_frame, screen_width};
+use macroquad::time::get_frame_time;
 use macroquad::ui::root_ui;
 use macroquad::window::screen_height;
 use crate::Algorithm::Algorithm;
@@ -20,24 +21,22 @@ impl State{
         let mut lasttime:f64 = 0.;
         let mut holder = GuiVec::new(screen_width(), screen_height(), length);
         let mut counter = 0;
-
+        let mut speed = 200;
         loop{
             clear_background(WHITE);
-            if get_time()-lasttime > timeout && !finished && !paused{
-                let now = Instant::now();
-                match Pin::new(& mut generator).resume(()){
-                    GeneratorState::Yielded(x) => {
-                        holder = x;
-                        let elapsed = now.elapsed();
-                        //println!("{}", elapsed.as_micros());
-                        println!("{}", get_fps())
-                    },
-                    GeneratorState::Complete(x) => {
-                        finished = true;
-                        paused = true;
-                    }
-                };
-                lasttime = get_time();
+            for _ in 0..speed{
+                if get_time()-lasttime > timeout && !finished && !paused{
+                    match Pin::new(& mut generator).resume(()){
+                        GeneratorState::Yielded(x) => {
+                            holder = x;
+                        },
+                        GeneratorState::Complete(x) => {
+                            finished = true;
+                            paused = true;
+                        }
+                    };
+                    lasttime = get_time();
+                }
             }
             holder.draw();
             draw_text(format!("Read: {}", holder.reads).as_str(), screen_width()*0.01, 20.0, 20.0, BLACK);
@@ -55,15 +54,9 @@ impl State{
             if root_ui().button(Vec2::new(screen_width()*0.01, 110.), "Return"){
                 ret = true;
             }
-            if (finished && ret) || ret {
-                break;
-            }
-            if counter != 20{
-                counter += 1;
-            }else{
-                counter = 0;
-                next_frame().await
-            }
+
+            next_frame().await
+
         }
     }
 }

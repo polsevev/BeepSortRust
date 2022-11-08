@@ -28,9 +28,10 @@ impl GuiVec{
     pub fn new(screen_width:f32, screen_height:f32,length:i32) -> Self {
         let barWidth = (screen_width/((length) as f32)) - 1_f32;
         let barHeightStep = (screen_height/((length) as f32));
+        let colorStep = 360./length as f32;
         let mut list:Vec<Bar> = vec!();
         for i in 1..length+1 {
-            list.push(Bar::new(i));
+            list.push(Bar::new(i, (colorStep*i as f32)/360.));
         }
         GuiVec{list, initialSize:length as usize, lastTime: 0.0 ,  reads:0, writes:0, comps:0, screen_height, screen_width}
     }
