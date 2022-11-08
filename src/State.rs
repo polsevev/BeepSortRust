@@ -48,7 +48,7 @@ impl State{
             draw_text(format!("Write: {}", holder.writes).as_str(), screen_width()*0.01, 40.0, 20.0, BLACK);
             draw_text(format!("Comparisons: {}", holder.comps).as_str(), screen_width()*0.01, 60.0, 20.0, BLACK);
             draw_text(format!("FPS: {}", get_fps()).as_str(), screen_width()*0.01, 80., 20.0, BLACK);
-            root_ui().window(hash!(), Vec2::new(screen_width()*0.1, 10.), Vec2::new(200., 25.), |ui|{
+            root_ui().window(hash!(), Vec2::new(screen_width()*0.2, 5.), Vec2::new(200., 25.), |ui|{
                 ui.input_text(hash!(), "Speed", &mut speedText);
             });
 
@@ -59,7 +59,7 @@ impl State{
                     paused = true;
                 }
             }
-            if root_ui().button(Vec2::new(screen_width()*0.01, 110.), "Return"){
+            if root_ui().button(Vec2::new(screen_width()*0.01, 120.), "Return"){
                 ret = true;
             }
             if ret{

@@ -10,3 +10,5 @@ macroquad = "0.3.25"
 
 [toolchain]
 channel = "nightly"
+[profile.release]
+opt-level=3
