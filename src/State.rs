@@ -1,5 +1,6 @@
 use std::ops::{Generator, GeneratorState};
 use std::pin::Pin;
+use std::time::Instant;
 use macroquad::color::{BLACK, WHITE};
 use macroquad::math::Vec2;
 use macroquad::prelude::{clear_background, draw_text, get_fps, get_time, next_frame, screen_width};
@@ -18,12 +19,18 @@ impl State{
         let mut ret = false;
         let mut lasttime:f64 = 0.;
         let mut holder = GuiVec::new(screen_width(), screen_height(), length);
+        let mut counter = 0;
+
         loop{
             clear_background(WHITE);
             if get_time()-lasttime > timeout && !finished && !paused{
+                let now = Instant::now();
                 match Pin::new(& mut generator).resume(()){
                     GeneratorState::Yielded(x) => {
                         holder = x;
+                        let elapsed = now.elapsed();
+                        //println!("{}", elapsed.as_micros());
+                        println!("{}", get_fps())
                     },
                     GeneratorState::Complete(x) => {
                         finished = true;
@@ -51,8 +58,12 @@ impl State{
             if (finished && ret) || ret {
                 break;
             }
-
-            next_frame().await
+            if counter != 20{
+                counter += 1;
+            }else{
+                counter = 0;
+                next_frame().await
+            }
         }
     }
 }

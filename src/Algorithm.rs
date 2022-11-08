@@ -30,7 +30,9 @@ impl Algorithm{
                     yield list.swap(j, j-1);
                     j = j-1;
                 }
+
             }
+
 
         }
     }
