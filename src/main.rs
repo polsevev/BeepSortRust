@@ -1,4 +1,4 @@
-#![feature(generators, generator_trait, type_alias_impl_trait)]
+
 mod BarPlugin;
 mod GuiHookVec;
 mod Algorithm;
