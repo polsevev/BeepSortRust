@@ -27,7 +27,7 @@ jobs:
           path: target/wasm32-unknown-unknown/release/
           remote_path: /home/beepsort/deploy
           remote_host: ${{ secrets.SERVER_IP }}
-          remote_user: ${{ beepsort }}
+          remote_user: beepsort
           remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          remote_port: ${{ 6969 }}
+          remote_port: 6969
         
