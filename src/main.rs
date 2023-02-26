@@ -17,7 +17,7 @@ async fn main() {
     let mut length = 1;
     let mut lengthString = "100".to_owned();
     let mut delay = 0.;
-    let mut delayText = "0.0".to_owned();
+    let mut delayText = "1".to_owned();
     loop{
         clear_background(WHITE);
 
@@ -38,9 +38,25 @@ async fn main() {
             ui.input_text(hash!(), "Length Of Array!", &mut lengthString);
         });
 
-        if root_ui().button(Vec2::new(screen_width()*0.01, 100.), "RUN!"){
+        if root_ui().button(Vec2::new(screen_width()*0.01, 100.), "Run InsertSort!"){
             //State::State::runInsertSort(delay,length).await;
             Algorithm::Algorithm::insertSort(length, 1.0).await;
+        }
+        if root_ui().button(Vec2::new(screen_width()*0.01, 130.), "Run BubbleSort!"){
+            //State::State::runInsertSort(delay,length).await;
+            Algorithm::Algorithm::bubbleSort(length, 1.0).await;
+        }
+        if root_ui().button(Vec2::new(screen_width()*0.01, 160.), "Run BinaryHeapSort!"){
+            //State::State::runInsertSort(delay,length).await;
+            Algorithm::Algorithm::binaryHeap(length, 1.0).await;
+        }
+        if root_ui().button(Vec2::new(screen_width()*0.01, 190.), "Run CoctailShakerSort!"){
+            //State::State::runInsertSort(delay,length).await;
+            Algorithm::Algorithm::cocktailShaker(length, 1.0).await;
+        }
+        if root_ui().button(Vec2::new(screen_width()*0.01, 220.), "Run BogoSort!"){
+            //State::State::runInsertSort(delay,length).await;
+            Algorithm::Algorithm::bogoSort(length, 1.0).await;
         }
         next_frame().await
     }

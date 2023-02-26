@@ -47,10 +47,10 @@ impl Algorithm{
         }
 
     }
+    */
 
-
-    pub async fn bubbleSort(length:i32){
-        let mut list = GuiVec::new(screen_width(), screen_height(), length);
+    pub async fn bubbleSort(length:i32, delay:f32){
+        let mut list = GuiVec::new(screen_width(), screen_height(), length, delay);
         list.randomize();
         let n = list.len();
         for i in 0..n {
@@ -63,8 +63,8 @@ impl Algorithm{
 
     }
 
-    pub async fn bogoSort(length:i32){
-        let mut list = GuiVec::new(screen_width(), screen_height(), length);
+    pub async fn bogoSort(length:i32, delay:f32){
+        let mut list = GuiVec::new(screen_width(), screen_height(), length, delay);
         list.randomize();
         loop{
             list.draw().await;
@@ -75,8 +75,8 @@ impl Algorithm{
         }
     }
 
-    pub async fn cocktailShaker(length:i32){
-        let mut list = GuiVec::new(screen_width(), screen_height(), length);
+    pub async fn cocktailShaker(length:i32, delay:f32){
+        let mut list = GuiVec::new(screen_width(), screen_height(), length, delay);
         list.randomize();
         let mut lowerBound = 0;
         let mut upperBound = list.len()-1;
@@ -108,8 +108,8 @@ impl Algorithm{
 
     }
 
-    pub async fn binaryHeap(length:i32){
-        let mut list = GuiVec::new(screen_width(), screen_height(), length);
+    pub async fn binaryHeap(length:i32, delay:f32){
+        let mut list = GuiVec::new(screen_width(), screen_height(), length, delay);
         let mut indexMap:HashMap<i32, usize> = HashMap::new();
         let mut binHeap:BinaryHeap<i32> = BinaryHeap::new();
         list.randomize();
@@ -130,7 +130,7 @@ impl Algorithm{
 
     }
 
-     */
+     
 
 
 

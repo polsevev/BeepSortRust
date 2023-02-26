@@ -65,14 +65,16 @@ impl GuiVec{
             });
             self.delay = match delayText.parse::<f32>(){
                 Ok(a) => a,
-                Err(error)=> {1.0}
+                Err(_)=> {f32::MAX}
             };
 
+
             next_frame().await;
-            if frames >= self.delay{
+
+            if frames >= self.delay/10000.0{
                 break;
             }
-            frames += get_frame_time()*1000.0;
+            frames += get_frame_time();
         }
 
     }
