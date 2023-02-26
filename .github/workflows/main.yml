@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install latest nightly
+      - name: Install latest stable
         uses: actions-rs/toolchain@v1
         with:
             toolchain: stable
@@ -21,14 +21,17 @@ jobs:
       - name: build-wasm-file
         run: |
           cargo build --target wasm32-unknown-unknown --release
-      - name: move index.html into target
+      - name: Prepare folder for rsync
         run: |
-          cp index.html target/wasm32-unknown-unknown/release/index.html
+          mkdir transport
+          cp index.html transport/
+          cp target/wasm32-unknown-unknown/release/BeepSortMacroQuad.d transport/
+          cp target/wasm32-unknown-unknown/release/BeepSortMacroQuad.wasm transport/
       - name: rsync files
         uses: burnett01/rsync-deployments@5.2
         with:
           switches: -avzr --delete
-          path: target/wasm32-unknown-unknown/release/
+          path: transport
           remote_path: /home/beepsort/deploy
           remote_host: ${{ secrets.SERVER_IP }}
           remote_user: beepsort
