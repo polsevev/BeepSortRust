@@ -26,18 +26,32 @@ pub struct GuiVec{
     screen_height:f32,
     screen_width:f32,
     isPaused:bool,
-    delay:f32
+    delay:f32,
+    pub done:bool
 
 }
 
 impl GuiVec{
+    
     pub fn new(screen_width:f32, screen_height:f32,length:i32, delay:f32) -> Self {
         let colorStep = 360./length as f32;
         let mut list:Vec<Bar> = vec!();
         for i in 1..length+1 {
             list.push(Bar::new(i, (colorStep*i as f32)/360.));
         }
-        GuiVec{list, initialSize:length as usize, lastTime: 0.0 ,  reads:0, writes:0, comps:0, screen_height, screen_width, isPaused:false, delay}
+        GuiVec{
+            list, 
+            initialSize:length as usize, 
+            lastTime: 0.0 ,  
+            reads:0, 
+            writes:0, 
+            comps:0, 
+            screen_height, 
+            screen_width, 
+            isPaused:false, 
+            delay, 
+            done:false
+        }
     }
 
     pub async fn draw(&mut self){
@@ -45,6 +59,7 @@ impl GuiVec{
         let mut delayText = self.delay.to_string();
 
         loop {
+
             /*
             self.checkPaused();
             if self.isPaused{
@@ -54,15 +69,23 @@ impl GuiVec{
              */
 
             clear_background(WHITE);
-            let mut count = 0;
-            for bar in  &self.list{
+
+            for (count,bar) in  self.list.iter().enumerate(){
                 draw_rectangle(screen_width() * ((count as f32)/(self.initialSize as f32)),screen_height() - (screen_height()/((self.len()) as f32))*bar.position as f32 , screen_width()/((self.len()) as f32), (screen_height()/((self.len()) as f32))*bar.position as f32, bar.color);
-                count += 1;
+
             }
+
 
             root_ui().window(hash!(), Vec2::new(screen_width()*0.2, 5.), Vec2::new(200., 25.), |ui|{
                 ui.input_text(hash!(), "Delay (ms)", &mut delayText);
+  
             });
+            
+            if root_ui().button(Vec2::new(screen_width()*0.2, 25.), "Exit"){
+                self.done = true;
+                break;
+            }
+
             self.delay = match delayText.parse::<f32>(){
                 Ok(a) => a,
                 Err(_)=> {f32::MAX}
@@ -71,7 +94,7 @@ impl GuiVec{
 
             next_frame().await;
 
-            if frames >= self.delay/10000.0{
+            if frames >= self.delay/10000.0 && !self.done{
                 break;
             }
             frames += get_frame_time();
@@ -110,11 +133,12 @@ impl GuiVec{
         self.initialSize -= 1;
     }
 
-    pub async fn swap(&mut self, index1:usize, index2:usize){
+    pub async fn swap(&mut self, index1:usize, index2:usize) -> bool{
         self.writes += 2;
         self.reads += 2;
         self.list.swap(index1, index2);
         self.draw().await;
+        self.done
     }
     pub fn randomize(&mut self){
         self.list.shuffle();
@@ -144,5 +168,15 @@ impl GuiVec{
         }
         true
     }
+    pub async fn show(&mut self){
+        loop{
+            if !self.done{
+                self.draw().await
+            }else{
+                break
+            }
+        }
+    }
+
 }
 
