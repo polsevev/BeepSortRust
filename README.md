@@ -7,3 +7,9 @@ This is a clone of the project [The Sound of Sorting](https://panthema.net/2013/
 It is written using the tiny game engine [MacroQuad](https://macroquad.rs/)
 
 WebAssembly version can be found here [beepsort.polsevev.dev](https://beepsort.polsevev.dev)
+
+## TODO:
+- Implement sound using browser API
+- Clean up user interface, perhaps move to JS?
+- Add more visualization modes (circle, points etc)
+- Add more algorithms
