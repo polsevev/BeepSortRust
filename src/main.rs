@@ -30,7 +30,7 @@ async fn main() {
             Err(error)=> {100}
         };
 
-        draw_text("Sorting! Hello Thor!", screen_width()*0.3, screen_height()*0.1, 100.0, GREEN);
+        draw_text("Sorting!", screen_width()*0.3, screen_height()*0.1, 100.0, GREEN);
         draw_text(format!("Length: {}", length.to_string()).as_str(), screen_width()*0.83, 30., 20.0, BLACK);
         draw_text(&get_fps().to_string(), screen_width()*0.7, 30.0, 20.0, BLACK);
         root_ui().window(hash!(), Vec2::new(screen_width()*0.01, 45.), Vec2::new(250., 50.), |ui|{
