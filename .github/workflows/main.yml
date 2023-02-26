@@ -8,9 +8,13 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Install Rust
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -y
+      - uses: actions/checkout@v2
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: stable
+            override: true
+            components: rustfmt, clippy
       - name: Add wasm with rustup
         run: |
           rustup target add wasm32-unknown-unknown
