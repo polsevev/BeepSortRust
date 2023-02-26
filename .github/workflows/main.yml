@@ -1,0 +1,35 @@
+name: Build and deploy to prod!
+
+on:
+  push:
+      branches:
+        -master
+        
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+      - name: Add wasm with rustup
+        run: |
+          rustup target add wasm32-unknown-unknown
+      - name: build-wasm-file
+        run: |
+          cargo build --target wasm32-unknown-unknown --release
+      - name: move index.html into target
+        run: |
+          cp index.html target/wasm32-unknown-unknown/release/index.html
+      - name: rsync files
+        uses: burnett01/rsync-deployments@5.2
+        with:
+          switches: -avzr --delete
+          path: target/wasm32-unknown-unknown/release/
+          remote_path: /home/beepsort/deploy
+          remote_host: ${{ secrets.SERVER_IP }}
+          remote_user: ${{ beepsort }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          remote_port: ${{ 6969 }}
+        
