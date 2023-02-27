@@ -16,7 +16,7 @@ pub struct Algorithm{
 impl Algorithm{
 
     pub async fn run(length:i32, delay:f32, functionName:String){
-        let mut list = GuiVec::new(screen_width(), screen_height(), length, delay);
+        let mut list = GuiVec::new(length, delay);
         list.randomize();
 
         match functionName.as_str() {
