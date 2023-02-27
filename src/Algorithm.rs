@@ -105,7 +105,7 @@ impl Algorithm{
             }
             swapped = false;
             upperBound = upperBound-1;
-            for i in ((lowerBound)..(upperBound-1)).rev() {
+            for i in ((lowerBound)..(upperBound)).rev() {
                 if list.lessThan(i+1, i) {
                     if list.swap(i+1, i).await {return};
                     swapped = true;
