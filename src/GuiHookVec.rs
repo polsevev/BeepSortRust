@@ -106,11 +106,6 @@ impl GuiVec{
                     (Ok(a), false) => a,
                     (Err(_), _)=> {f32::MAX}
                 };
-                if get_fps() < 50{
-
-                    self.renderSkip /= 2;
-                    
-                }
                 next_frame().await;
                 self.skipped = 0;
             }else{
