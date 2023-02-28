@@ -5,6 +5,7 @@ mod Algorithm;
 
 use macroquad::prelude::*;
 use macroquad::prelude::scene::clear;
+
 use crate::BarPlugin::Bar;
 use crate::GuiHookVec::GuiVec;
 
@@ -20,6 +21,9 @@ async fn main() {
     let mut delayText = "1".to_owned();
     loop{
         clear_background(WHITE);
+
+
+
 
         delay = match delayText.parse::<f64>(){
             Ok(a) => a/1000.,
@@ -52,6 +56,9 @@ async fn main() {
         }
         if root_ui().button(Vec2::new(screen_width()*0.01, 220.), "Run BogoSort!"){
             algo = "bogoSort";
+        }
+        if root_ui().button(Vec2::new(screen_width()*0.01, 250.), "Run QuickSort!"){
+            algo = "quickSort";
         }
 
         if algo != ""{

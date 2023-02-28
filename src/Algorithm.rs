@@ -3,10 +3,12 @@ use crate::BarPlugin::Bar;
 use crate::GuiHookVec::GuiVec;
 
 
+use async_recursion::async_recursion;
 use macroquad::prelude::screen_width;
 use macroquad::window::screen_height;
 use std::collections::BinaryHeap;
 use std::collections::HashMap;
+
 
 #[derive(Debug, Clone)]
 pub struct Algorithm{
@@ -25,6 +27,7 @@ impl Algorithm{
             "bogoSort" => Algorithm::bogoSort(&mut list).await,
             "cocktailShaker" => Algorithm::cocktailShaker(&mut list).await,
             "binaryHeap" => Algorithm::binaryHeap(&mut list).await,
+            "quickSort" => Algorithm::quickSort(&mut list, 0, length as usize -1).await,
             _ => panic!("No algorithm with that name implemented!")
         }
 
@@ -141,7 +144,48 @@ impl Algorithm{
 
     }
 
-     
+ 
+
+    pub async fn partition(list:&mut GuiVec, mut low:usize, mut high:usize, p:i32) -> i32{
+        while low <= high{
+            while list.list[low].position < p{
+                low += 1;
+            }
+            while list.list[high].position > p{
+                high -= 1;
+            }
+            if low <= high{
+                if list.swap(low, high).await {return -1};
+                low+=1;
+                if high == 0{
+                    return low as i32
+                }
+                high-=1;
+            }
+        }
+        low as i32
+    }
+
+    #[async_recursion]
+    pub async fn quickSort(list:&mut GuiVec, low:usize, high:usize) {
+        if low>=high{
+            return;
+        }
+
+        let p = list.list[0].position;
+        let mut index = 0;
+        let temp = Algorithm::partition(list, low, high, p).await;
+        if temp < 0{
+            return
+        }else{
+            index = temp as usize
+        }
+
+        Algorithm::quickSort(list, low, index-1).await;
+        Algorithm::quickSort(list, index, high).await;
+        
+
+    }
 
 
 

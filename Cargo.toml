@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 macroquad = "0.3.25"
-
+async-recursion = "1.0.2"
 [toolchain]
 channel = "nightly"
 [profile.release]

@@ -18,7 +18,7 @@ use crate::Algorithm::Algorithm;
 
 #[derive(Clone, Debug)]
 pub struct GuiVec{
-    list: Vec<Bar>,
+    pub list: Vec<Bar>,
     initialSize:usize,
     pub lastTime:f64,
     pub reads:i32,
@@ -74,7 +74,7 @@ impl GuiVec{
 
                 for (count,bar) in  self.list.iter().enumerate(){
                     draw_rectangle(screen_width() * ((count as f32)/(self.initialSize as f32)),screen_height() - (screen_height()/((self.len()) as f32))*bar.position as f32 , screen_width()/((self.len()) as f32), (screen_height()/((self.len()) as f32))*bar.position as f32, bar.color);
-    
+                    
                 }
     
                 draw_text(&format!("FPS: {}", get_fps()), screen_width()*0.01 + 40., 80.0, 20.0, BLACK);
