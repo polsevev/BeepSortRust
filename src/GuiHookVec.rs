@@ -150,6 +150,10 @@ impl GuiVec{
         self.comps += 1;
         return self.get(a).position < self.get(b).position
     }
+    pub fn lessThanEqual(&mut self, a:usize, b:i32) -> bool{
+        self.comps += 1;
+        return self.get(a).position <= b
+    }
     pub fn isSorted(&mut self) -> bool{
         self.reads += self.len() as i32;
         let mut prev = 0;

@@ -8,6 +8,7 @@ use macroquad::prelude::screen_width;
 use macroquad::window::screen_height;
 use std::collections::BinaryHeap;
 use std::collections::HashMap;
+use std::f32::consts::PI;
 
 
 #[derive(Debug, Clone)]
@@ -27,7 +28,7 @@ impl Algorithm{
             "bogoSort" => Algorithm::bogoSort(&mut list).await,
             "cocktailShaker" => Algorithm::cocktailShaker(&mut list).await,
             "binaryHeap" => Algorithm::binaryHeap(&mut list).await,
-            "quickSort" => Algorithm::quickSort(&mut list, 0, length as usize -1).await,
+            "quickSort" => Algorithm::quickSort(&mut list).await,
             _ => panic!("No algorithm with that name implemented!")
         }
 
@@ -147,43 +148,44 @@ impl Algorithm{
  
 
     pub async fn partition(list:&mut GuiVec, mut low:usize, mut high:usize, p:i32) -> i32{
-        while low <= high{
-            while list.list[low].position < p{
-                low += 1;
-            }
-            while list.list[high].position > p{
-                high -= 1;
-            }
-            if low <= high{
-                if list.swap(low, high).await {return -1};
-                low+=1;
-                if high == 0{
-                    return low as i32
-                }
-                high-=1;
+        let mut pIndex = low;
+
+        for i in low..high{
+            if list.lessThanEqual(i, p){
+                if list.swap(i, pIndex).await {return -1}
+                pIndex += 1;
             }
         }
-        low as i32
+        if list.swap(pIndex, high).await {return -1};
+
+        return pIndex as i32
     }
 
-    #[async_recursion]
-    pub async fn quickSort(list:&mut GuiVec, low:usize, high:usize) {
-        if low>=high{
-            return;
-        }
 
-        let p = list.list[0].position;
-        let mut index = 0;
-        let temp = Algorithm::partition(list, low, high, p).await;
-        if temp < 0{
-            return
-        }else{
-            index = temp as usize
-        }
+    pub async fn quickSort(list:&mut GuiVec) {
+        let mut stack:Vec<(usize,usize)> = Vec::new();
+  
+        let start = 0;
+        let end = list.len()-1;
 
-        Algorithm::quickSort(list, low, index-1).await;
-        Algorithm::quickSort(list, index, high).await;
-        
+        stack.push((start,end));
+
+        while stack.len() > 0{
+            let (start,end) = stack.pop().unwrap();
+
+            let p = list.list[end].position;
+            let temp = Algorithm::partition(list, start, end, p).await;
+            let pivot = if temp >= 0 {temp} else {return};
+            
+            if pivot != 0 && pivot as usize -1 > start{
+                
+                stack.push((start,pivot as usize-1));
+            }
+
+            if pivot as usize + 1 < end{
+                stack.push((pivot as usize +1, end))
+            }
+        }
 
     }
 
