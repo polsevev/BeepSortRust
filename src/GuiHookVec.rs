@@ -166,6 +166,15 @@ impl GuiVec{
         }
         true
     }
+    pub async fn set(&mut self, i:usize, elem:Bar) -> bool{
+
+        self.writes += 1;
+        self.reads += 1;
+        self.list[i] = elem;
+        self.draw().await;
+        self.done
+    
+    }
     pub async fn show(&mut self){
         loop{
             if !self.done{

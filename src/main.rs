@@ -60,6 +60,9 @@ async fn main() {
         if root_ui().button(Vec2::new(screen_width()*0.01, 250.), "Run QuickSort!"){
             algo = "quickSort";
         }
+        if root_ui().button(Vec2::new(screen_width()*0.01, 280.), "Run RadixSort!"){
+            algo = "radixSort";
+        }
 
         if algo != ""{
             Algorithm::Algorithm::run(length, 1.0, algo.to_string()).await;
