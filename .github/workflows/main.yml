@@ -15,11 +15,11 @@ jobs:
             toolchain: stable
             override: true
             components: rustfmt, clippy
-      - name : Run Tests
-        run: cargo test --all
       - name: Add wasm with rustup
         run: |
           rustup target add wasm32-unknown-unknown
+      - name : Run Tests
+        run: cargo test --all --release
       - name: build-wasm-file
         run: |
           cargo build --target wasm32-unknown-unknown --release
