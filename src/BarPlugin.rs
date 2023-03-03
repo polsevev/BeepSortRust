@@ -2,7 +2,7 @@ use macroquad::color;
 use macroquad::color_u8;
 use macroquad::rand;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct Bar {
     pub position:i32,
     pub color:color::Color

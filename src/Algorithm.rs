@@ -1,14 +1,17 @@
 
 use crate::BarPlugin::Bar;
+use crate::GuiHookVec;
 use crate::GuiHookVec::GuiVec;
+use crate::GuiHookVec::SortingList;
 
 
-use async_recursion::async_recursion;
-use macroquad::prelude::screen_width;
-use macroquad::window::screen_height;
+
+
 use std::collections::BinaryHeap;
 use std::collections::HashMap;
+use std::collections::HashSet;
 use std::f32::consts::PI;
+use std::hash::Hash;
 
 
 #[derive(Debug, Clone)]
@@ -19,8 +22,9 @@ pub struct Algorithm{
 impl Algorithm{
 
     pub async fn run(length:i32, delay:f32, functionName:String){
-        let mut list = GuiVec::new(length, delay);
+        let mut list:GuiVec = SortingList::new(length, delay);
         list.randomize();
+        
 
         match functionName.as_str() {
             "insertSort" => Algorithm::insertSort(&mut list).await,
@@ -29,6 +33,7 @@ impl Algorithm{
             "cocktailShaker" => Algorithm::cocktailShaker(&mut list).await,
             "binaryHeap" => Algorithm::binaryHeap(&mut list).await,
             "quickSort" => Algorithm::quickSort(&mut list).await,
+            "radixSort" => Algorithm::radixSort(&mut list).await,
             _ => panic!("No algorithm with that name implemented!")
         }
 
@@ -39,7 +44,7 @@ impl Algorithm{
         }
     }
 
-    pub async fn insertSort(list:&mut GuiVec){
+    pub async fn insertSort(list:&mut impl SortingList){
         for index in 0..list.len(){
             let mut j = index;
             while j>0 && list.lessThan(j, j-1){
@@ -69,7 +74,7 @@ impl Algorithm{
     }
     */
 
-    pub async fn bubbleSort(list:&mut GuiVec){
+    pub async fn bubbleSort(list:&mut impl SortingList){
         let n = list.len();
         for i in 0..n {
             for j in 0..(n - i - 1) {
@@ -81,7 +86,7 @@ impl Algorithm{
 
     }
 
-    pub async fn bogoSort(list:&mut GuiVec){
+    pub async fn bogoSort(list:&mut impl SortingList){
 
         loop{
             if list.swap(0,0).await {return};
@@ -92,7 +97,7 @@ impl Algorithm{
         }
     }
 
-    pub async fn cocktailShaker(list:&mut GuiVec){
+    pub async fn cocktailShaker(list:&mut impl SortingList){
         let mut lowerBound = 0;
         let mut upperBound = list.len()-1;
         let mut swapped = true;
@@ -123,7 +128,7 @@ impl Algorithm{
 
     }
 
-    pub async fn binaryHeap(list:&mut GuiVec){
+    pub async fn binaryHeap(list:&mut impl SortingList){
 
         let mut indexMap:HashMap<i32, usize> = HashMap::new();
         let mut binHeap:BinaryHeap<i32> = BinaryHeap::new();
@@ -147,7 +152,7 @@ impl Algorithm{
 
  
 
-    pub async fn partition(list:&mut GuiVec, mut low:usize, mut high:usize, p:i32) -> i32{
+    pub async fn partition(list:&mut impl SortingList, mut low:usize, mut high:usize, p:i32) -> i32{
         let mut pIndex = low;
 
         for i in low..high{
@@ -162,7 +167,7 @@ impl Algorithm{
     }
 
 
-    pub async fn quickSort(list:&mut GuiVec) {
+    pub async fn quickSort(list:&mut impl SortingList) {
         let mut stack:Vec<(usize,usize)> = Vec::new();
   
         let start = 0;
@@ -173,7 +178,7 @@ impl Algorithm{
         while stack.len() > 0{
             let (start,end) = stack.pop().unwrap();
 
-            let p = list.list[end].position;
+            let p = list.get(end).position;
             let temp = Algorithm::partition(list, start, end, p).await;
             let pivot = if temp >= 0 {temp} else {return};
             
@@ -187,6 +192,53 @@ impl Algorithm{
             }
         }
 
+    }
+
+    pub async fn radixSort(list:&mut impl SortingList) {
+        
+        let mut max = usize::MAX;
+        for i in list.getListClone().into_iter().map(|x| x.position.to_string()){
+            if max < i.len(){
+                max = i.len();
+            }
+        }
+
+        for i in 0..(max){
+            if Algorithm::radix(list, i).await {return};
+        }
+    }
+
+    pub async fn radix(list:&mut impl SortingList, radix:usize) -> bool{
+        let mut bucket = vec![vec![];10];
+
+        for (i, bar) in list.elements().enumerate(){
+            
+            let cur = bar.position.to_string().chars().rev().collect::<Vec<char>>();
+            if cur.len() > radix{
+                bucket[cur[radix].to_digit(10).unwrap() as usize].push(i);
+            }else{
+                bucket[0].push(i);
+            }
+           
+        }
+
+
+        let mut sortedIndexes = Vec::new();
+        for elements in bucket.into_iter(){
+            for i in elements{
+                sortedIndexes.push(i);
+            }
+        }
+
+        let mut listClone = list.getListClone();
+        let mut count = 0;
+        for i in sortedIndexes.clone(){
+            if list.set(count, listClone[i]).await {return true};
+            count += 1;
+
+        }
+        
+        false
     }
 
 
