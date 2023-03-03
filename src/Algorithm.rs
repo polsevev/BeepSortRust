@@ -1,6 +1,4 @@
 
-use crate::BarPlugin::Bar;
-use crate::GuiHookVec;
 use crate::GuiHookVec::GuiVec;
 use crate::GuiHookVec::SortingList;
 
@@ -9,9 +7,6 @@ use crate::GuiHookVec::SortingList;
 
 use std::collections::BinaryHeap;
 use std::collections::HashMap;
-use std::collections::HashSet;
-use std::f32::consts::PI;
-use std::hash::Hash;
 
 
 #[derive(Debug, Clone)]
@@ -34,6 +29,7 @@ impl Algorithm{
             "binaryHeap" => Algorithm::binaryHeap(&mut list).await,
             "quickSort" => Algorithm::quickSort(&mut list).await,
             "radixSort" => Algorithm::radixSort(&mut list).await,
+            "stalinSort" => Algorithm::stalinSort(&mut list).await,
             _ => panic!("No algorithm with that name implemented!")
         }
 
@@ -54,10 +50,8 @@ impl Algorithm{
         }
     }
 
-    /*
-    pub fn stalinSort(length:i32){
-        let mut list = GuiVec::new(screen_width(), screen_height(), length);
-        list.randomize();
+    
+    pub async fn stalinSort(list:&mut impl SortingList){
 
         let mut cur = 1;
         loop{
@@ -65,15 +59,17 @@ impl Algorithm{
                 break;
             }
             if list.lessThan(cur, cur-1){
-                list.delete(cur);
+                let mut temp = list.get(cur).clone();
+                temp.position = 0;
+                if list.set(cur, temp).await {return};
             }else{
                 cur += 1;
             }
-            yield list.clone();
+            
         }
 
     }
-    */
+    
 
     pub async fn bubbleSort(list:&mut impl SortingList){
         let n = list.len();
@@ -253,9 +249,6 @@ mod tests {
 
 use super::*;
   
-
-
-  // ... the other async test
 
   macro_rules! aw {
     ($e:expr) => {

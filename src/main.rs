@@ -64,6 +64,7 @@ async fn main() {
             algo = "radixSort";
         }
 
+
         if algo != ""{
             Algorithm::Algorithm::run(length, 1.0, algo.to_string()).await;
         }
