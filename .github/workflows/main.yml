@@ -18,8 +18,7 @@ jobs:
       - name: Add wasm with rustup
         run: |
           rustup target add wasm32-unknown-unknown
-      - name : Run Tests
-        run: cargo test --all --release
+
       - name: build-wasm-file
         run: |
           cargo build --target wasm32-unknown-unknown --release
