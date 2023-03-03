@@ -2,6 +2,7 @@
 use std::borrow::{Borrow, BorrowMut};
 use std::ops::Add;
 use std::path::Iter;
+use async_trait::async_trait;
 use macroquad::color::{BROWN, WHITE};
 use macroquad::hash;
 use macroquad::prelude::{clear_background, Vec2, BLACK};
@@ -31,10 +32,40 @@ pub struct GuiVec{
     skipped:i32
 
 }
+#[async_trait]
+pub trait SortingList{
 
-impl GuiVec{
+    fn new(length:i32, delay:f32) -> Self;
+
+    fn len(&self) -> usize;
+
+    async fn swap(&mut self, index1:usize, index2:usize) -> bool;
+
+    async fn draw(&mut self);
     
-    pub fn new(length:i32, delay:f32) -> Self {
+    fn randomize(&mut self);
+
+    fn elements(&mut self) -> std::slice::Iter<'_, Bar>;
+
+    fn get(&mut self, i:usize)-> &Bar;
+
+    fn lessThan(&mut self, a:usize, b:usize) -> bool;
+
+
+    fn lessThanEqual(&mut self, a:usize, b:i32) -> bool;
+
+    fn isSorted(&mut self) -> bool;
+
+    async fn set(&mut self, i:usize, elem:Bar) -> bool;
+
+    async fn show(&mut self);
+
+    fn getListClone(&self) -> Vec<Bar>;
+}
+#[async_trait]
+impl SortingList for  GuiVec{
+    
+    fn new(length:i32, delay:f32) -> Self {
         let colorStep = 360./length as f32;
         let mut list:Vec<Bar> = vec!();
         for i in 1..length+1 {
@@ -55,7 +86,7 @@ impl GuiVec{
         }
     }
 
-    pub async fn draw(&mut self){
+    async fn draw(&mut self){
         let mut frames = 0.0;
         let mut delayText = self.delay.to_string();
         let mut renderSkipText = self.renderSkip.to_string();
@@ -123,38 +154,38 @@ impl GuiVec{
     }
 
 
-    pub fn len(&self) -> usize{
+    fn len(&self) -> usize{
         self.list.len()
     }
 
-    pub async fn swap(&mut self, index1:usize, index2:usize) -> bool{
+    async fn swap(&mut self, index1:usize, index2:usize) -> bool{
         self.writes += 2;
         self.reads += 2;
         self.list.swap(index1, index2);
         self.draw().await;
         self.done
     }
-    pub fn randomize(&mut self){
+    fn randomize(&mut self){
         self.list.shuffle();
     }
 
-    pub fn elements(&mut self) -> std::slice::Iter<'_, Bar> {
+    fn elements(&mut self) -> std::slice::Iter<'_, Bar> {
         self.list.iter()
     }
 
-    pub fn get(&mut self, i:usize)-> &Bar{
+    fn get(&mut self, i:usize)-> &Bar{
         self.reads += 1;
         self.list.get(i).unwrap()
     }
-    pub fn lessThan(&mut self, a:usize, b:usize) -> bool{
+    fn lessThan(&mut self, a:usize, b:usize) -> bool{
         self.comps += 1;
         return self.get(a).position < self.get(b).position
     }
-    pub fn lessThanEqual(&mut self, a:usize, b:i32) -> bool{
+    fn lessThanEqual(&mut self, a:usize, b:i32) -> bool{
         self.comps += 1;
         return self.get(a).position <= b
     }
-    pub fn isSorted(&mut self) -> bool{
+    fn isSorted(&mut self) -> bool{
         self.reads += self.len() as i32;
         let mut prev = 0;
         for bar in self.list.iter() {
@@ -166,7 +197,7 @@ impl GuiVec{
         }
         true
     }
-    pub async fn set(&mut self, i:usize, elem:Bar) -> bool{
+    async fn set(&mut self, i:usize, elem:Bar) -> bool{
 
         self.writes += 1;
         self.reads += 1;
@@ -175,7 +206,7 @@ impl GuiVec{
         self.done
     
     }
-    pub async fn show(&mut self){
+    async fn show(&mut self){
         loop{
             if !self.done{
                 self.draw().await
@@ -185,5 +216,81 @@ impl GuiVec{
         }
     }
 
+    fn getListClone(&self) -> Vec<Bar>{
+        self.list.clone()
+    }
+
 }
 
+struct NonGuiVec{
+    pub list: Vec<Bar>,
+
+}
+#[async_trait]
+impl SortingList for  NonGuiVec{
+    fn new(length:i32, delay:f32) -> Self{
+        let mut list = Vec::new();
+        for i in 0..(length as usize){
+            list.push(Bar::new(i as i32, i as f32))
+        }
+        NonGuiVec { list: list }
+    }   
+
+    fn len(&self) -> usize{
+        self.list.len()
+    }
+
+    async fn swap(&mut self, index1:usize, index2:usize) -> bool{
+        self.list.swap(index1, index2);
+        false
+    }
+
+    async fn draw(&mut self){
+        self.swap(0, 0).await;
+    }
+    
+    fn randomize(&mut self){
+        self.list.shuffle();
+    }
+
+    fn elements(&mut self) -> std::slice::Iter<'_, Bar> {
+        self.list.iter()
+    }
+
+    fn get(&mut self, i:usize)-> &Bar{
+
+        self.list.get(i).unwrap()
+    }
+    fn lessThan(&mut self, a:usize, b:usize) -> bool{
+
+        return self.get(a).position < self.get(b).position
+    }
+    fn lessThanEqual(&mut self, a:usize, b:i32) -> bool{
+        return self.get(a).position <= b
+    }
+    fn isSorted(&mut self) -> bool{
+        let mut prev = 0;
+        for bar in self.list.iter() {
+            if bar.position < prev{
+                return false;
+            }else{
+                prev = bar.position;
+            }
+        }
+        true
+    }
+    async fn set(&mut self, i:usize, elem:Bar) -> bool{
+
+        self.list[i] = elem;
+        self.draw().await;
+        false
+    
+    }
+    async fn show(&mut self){
+
+    }
+    fn getListClone(&self) -> Vec<Bar>{
+        self.list.clone()
+    }
+
+}
