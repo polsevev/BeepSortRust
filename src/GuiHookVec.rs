@@ -222,7 +222,7 @@ impl SortingList for  GuiVec{
 
 }
 
-struct NonGuiVec{
+pub struct NonGuiVec{
     pub list: Vec<Bar>,
 
 }

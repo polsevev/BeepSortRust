@@ -53,6 +53,7 @@ impl Algorithm{
             }
         }
     }
+
     /*
     pub fn stalinSort(length:i32){
         let mut list = GuiVec::new(screen_width(), screen_height(), length);
@@ -243,4 +244,29 @@ impl Algorithm{
 
 
 
+}
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod tests {
+  use crate::GuiHookVec::NonGuiVec;
+
+use super::*;
+  
+
+
+  // ... the other async test
+
+  macro_rules! aw {
+    ($e:expr) => {
+        tokio_test::block_on($e)
+    };
+  }
+
+  #[test]
+  fn test_str_len_async_2() {
+    let mut list:NonGuiVec = SortingList::new(1000,0.0);
+    aw!(Algorithm::insertSort(&mut list));
+    assert_eq!( list.isSorted(), true);
+  }
 }
