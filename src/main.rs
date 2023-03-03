@@ -1,7 +1,7 @@
 
 mod BarPlugin;
 mod GuiHookVec;
-mod Algorithm;
+mod algorithm;
 
 use macroquad::prelude::*;
 use macroquad::prelude::scene::clear;
@@ -66,7 +66,7 @@ async fn main() {
 
 
         if algo != ""{
-            Algorithm::Algorithm::run(length, 1.0, algo.to_string()).await;
+            algorithm::Algorithm::run(length, 1.0, algo.to_string()).await;
         }
         next_frame().await
     }

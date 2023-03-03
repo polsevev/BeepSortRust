@@ -13,7 +13,7 @@ use macroquad::time::{get_frame_time, get_fps};
 use macroquad::ui::root_ui;
 use macroquad::window::{next_frame, screen_height, screen_width};
 use crate::BarPlugin::Bar;
-use crate::Algorithm::Algorithm;
+use crate::algorithm::Algorithm;
 
 
 
