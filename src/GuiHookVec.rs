@@ -80,7 +80,7 @@ impl SortingList for  GuiVec{
         //Generate sounds
         let mut sounds = Vec::with_capacity(1000);
         for i in (50..2100).step_by(2){
-            sounds.push(soundGenerator::generateTone(i as f32, 0.1).await);
+            sounds.push(soundGenerator::generateTone(i as f32, 0.05).await);
         }
 
         GuiVec{
@@ -178,9 +178,9 @@ impl SortingList for  GuiVec{
         self.list.swap(index1, index2);
 
 
-        if time::get_time() + 0.5 >= self.lastPlayed{
+        if time::get_time() + 0.05 >= self.lastPlayed{
             play_sound_once(self.sounds[ (self.list[index1].position * 1000 / self.list.len()) ]);
-            self.lastPlayed = time::get_time()+0.5;
+            self.lastPlayed = time::get_time()+0.05;
         }
 
         //self.list[index2].playSound();
