@@ -1,7 +1,5 @@
 
-use std::borrow::{Borrow, BorrowMut};
-use std::ops::Add;
-use std::path::Iter;
+
 use async_trait::async_trait;
 use macroquad::color::{BROWN, WHITE};
 use macroquad::hash;
@@ -13,7 +11,7 @@ use macroquad::time::{get_frame_time, get_fps};
 use macroquad::ui::root_ui;
 use macroquad::window::{next_frame, screen_height, screen_width};
 use crate::BarPlugin::Bar;
-use crate::algorithm::Algorithm;
+
 
 
 
