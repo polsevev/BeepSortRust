@@ -5,6 +5,7 @@ mod binaryHeap;
 mod coctailShaker;
 mod quickSort;
 mod bogoSort;
+mod radixSortLSD;
 
 
 use crate::GuiHookVec::GuiVec;
@@ -26,7 +27,8 @@ impl Algorithm{
             "cocktailShaker".to_string(),
             "binaryHeap".to_string(),
             "quickSort".to_string(),
-            "radixSort".to_string(),
+            "radixSortMSD".to_string(),
+            "radixSortLSD".to_string()
             ] }
     }
     pub async fn run(length:usize, delay:f32, functionName:String){
@@ -41,7 +43,8 @@ impl Algorithm{
             "cocktailShaker" => coctailShaker::cocktailShaker(&mut list).await,
             "binaryHeap" => binaryHeap::binaryHeap(&mut list).await,
             "quickSort" => quickSort::quickSort(&mut list).await,
-            "radixSort" => radixSort::radixSort(&mut list).await,
+            "radixSortMSD" => radixSort::radixSort(&mut list).await,
+            "radixSortLSD" => radixSortLSD::radixSort(&mut list).await,
             _ => panic!("No algorithm with that name implemented!")
         }
 

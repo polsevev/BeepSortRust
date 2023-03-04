@@ -95,13 +95,7 @@ impl SortingList for  GuiVec{
 
         loop {
 
-            /*
-            self.checkPaused();
-            if self.isPaused{
-                break;
-            }
 
-             */
             if self.skipped >= self.renderSkip{
                 clear_background(WHITE);
 
@@ -114,15 +108,16 @@ impl SortingList for  GuiVec{
                     
                 }
     
-                draw_text(&format!("FPS: {}", get_fps()), screen_width()*0.01 + 40., 80.0, 20.0, BLACK);
-                draw_text(&format!("Array reads: {}", self.reads), screen_width()*0.01 + 40., 110.0, 20.0, BLACK);
-                draw_text(&format!("Array writes: {}", self.writes), screen_width()*0.01 + 40., 140.0, 20.0, BLACK);
-                draw_text(&format!("Comparisons: {}", self.comps), screen_width()*0.01 + 40., 170.0, 20.0, BLACK);
-                
+
                 root_ui().window(hash!(),Vec2::new(screen_width()*0.01, 5.), Vec2::new(800.0, 50.), |ui|{
                     ui.input_text(hash!(), "Delay (ms)", &mut delayText);
                     ui.input_text(hash!(), "StepsPrFrame (How many steps of the algorithm pr frame)", &mut renderSkipText);
-      
+                    draw_text(&format!("FPS: {}", get_fps()), screen_width()*0.01 + 40., 80.0, 20.0, BLACK);
+                    draw_text(&format!("Array reads: {}", self.reads), screen_width()*0.01 + 40., 110.0, 20.0, BLACK);
+                    draw_text(&format!("Array writes: {}", self.writes), screen_width()*0.01 + 40., 140.0, 20.0, BLACK);
+                    draw_text(&format!("Comparisons: {}", self.comps), screen_width()*0.01 + 40., 170.0, 20.0, BLACK);
+                    
+                    
                 });
                 
                 if root_ui().button(Vec2::new(screen_width()*0.01, 60.), "Exit"){
