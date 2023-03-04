@@ -1,4 +1,4 @@
-use async_recursion::async_recursion;
+
 
 use crate::GuiHookVec::SortingList;
 
@@ -19,15 +19,15 @@ pub async fn radixSort(list:&mut impl SortingList) {
     let mut stack:Vec<(usize, usize)> = Vec::new();
     let mut stack2:Vec<(usize,usize)> = Vec::new();
     stack.push((0, list.len()));
-    for i in (0..max).rev(){
-
-
-
+    for i in (0..(max)).rev(){
+        println!("Sorting by bit {}", i);
         while stack.len() > 0{
             let cur = stack.pop().unwrap();
-            print!("{:?}", cur);
+            println!("{:?}", cur);
+            println!("{:?}", stack2);
             match radix(list, i, cur.0, cur.1).await{
                 Some((initial, switch, max)) => {
+                    println!("{}, {}, {}", initial, switch, max);
                     if initial < switch{
                         stack2.push((initial, switch));
                     }
@@ -39,8 +39,17 @@ pub async fn radixSort(list:&mut impl SortingList) {
                 },
                 None => return
             }
+            // let mut bitVec:Vec<usize> = Vec::new();
+            // for y in 0..list.len(){
+            //     let currentBit = get_bit_at(list.get(y).position, i);
+            //     bitVec.push(if currentBit {1} else {0});
+            // }
+            // println!("{:?}", bitVec);
+     
         }
-        stack = stack2.clone();  
+        
+        stack = stack2.clone(); 
+        stack2.clear(); 
     }
 }
 
@@ -48,12 +57,7 @@ async fn radix(list:&mut impl SortingList, radix:usize, mut minBoundry:usize, mu
     let initialMin = minBoundry.clone();
     let initialMax = maxBoundry.clone();
 
-    // let mut bitVec:Vec<usize> = Vec::new();
-    // for i in 0..list.len(){
-    //     let currentBit = get_bit_at(list.get(i).position, radix);
-    //     bitVec.push(if currentBit {1} else {0});
-    // }
-    // println!("{:?}", bitVec);
+
 
     loop{
         if maxBoundry == minBoundry{
@@ -81,7 +85,7 @@ async fn radix(list:&mut impl SortingList, radix:usize, mut minBoundry:usize, mu
     Some((initialMin, minBoundry, initialMax))
 }
 fn get_bit_at(input: usize, n: usize) -> bool {
-    println!("{} >= {}", format!("{:b}", input).len(), n);
+
     if format!("{:b}", input).len() <= n{
         false
     }else{
