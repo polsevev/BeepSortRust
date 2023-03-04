@@ -2,7 +2,7 @@
 
 use async_trait::async_trait;
 use macroquad::color::{BROWN, WHITE};
-use macroquad::hash;
+use macroquad::{hash, time};
 use macroquad::prelude::{clear_background, Vec2, BLACK};
 use macroquad::rand::ChooseRandom;
 use macroquad::shapes::draw_rectangle;
@@ -29,7 +29,7 @@ pub struct GuiVec{
     renderSkip:i32,
     skipped:i32,
     lastTouched:Vec<usize>,
-
+    lastPlayed:f64
 }
 #[async_trait]
 pub trait SortingList{
@@ -84,7 +84,8 @@ impl SortingList for  GuiVec{
             done:false,
             renderSkip:1,
             skipped:0,
-            lastTouched:Vec::with_capacity(2)
+            lastTouched:Vec::with_capacity(2),
+            lastPlayed:0.,
         }
     }
 
@@ -163,7 +164,13 @@ impl SortingList for  GuiVec{
         self.writes += 2;
         self.reads += 2;
         self.list.swap(index1, index2);
-        self.list[index1].playSound();
+
+
+        if time::get_time() + 0.5 >= self.lastPlayed{
+            self.list[index1].playSound();
+            self.lastPlayed = time::get_time()+0.5;
+        }
+
         //self.list[index2].playSound();
         self.lastTouched.clear();
         self.lastTouched.push(index1);
