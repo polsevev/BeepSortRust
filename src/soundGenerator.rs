@@ -64,7 +64,7 @@ pub async fn generateTone(frequency: f32, duration:f32) -> Sound{
 
     let mut collect = Vec::new();
     for i in 0..((SAMPLE_RATE as f32 * duration) as usize){
-        let amplitude = 1500. / SAMPLE_RATE as f32 * MAX_AMPLITUDE as f32;
+        let amplitude = f32::min(i as f32 * 100., 1500.)/ SAMPLE_RATE as f32 * MAX_AMPLITUDE as f32;
         let value = f32::sin((2. * PI * (i as f32) *  (frequency as f32)) / SAMPLE_RATE as f32);
         let channel = (amplitude * value);
 
