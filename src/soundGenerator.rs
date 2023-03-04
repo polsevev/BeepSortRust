@@ -1,6 +1,6 @@
 use std::f32::consts::PI;
 
-use macroquad::audio::{Sound, load_sound_from_bytes};
+use macroquad::{audio::{Sound, load_sound_from_bytes}, window::{next_frame, screen_width, screen_height}, text::draw_text, prelude::BLACK};
 
 
 const CHUNK_ID:&str = "RIFF";
@@ -69,7 +69,10 @@ pub async fn generateTone(frequency: f32, duration:f32) -> Sound{
         let channel = (amplitude * value);
 
         collect.push(channel);
-        soundFileBytes.append(&mut (channel as i16).to_le_bytes().to_vec())
+        soundFileBytes.append(&mut (channel as i16).to_le_bytes().to_vec());
+
+        draw_text("Processing Audio beeps!", (screen_width() / 2.)-170.0, screen_height()*0.1, 100.0, BLACK);
+        next_frame().await
     }
     let endAudio = soundFileBytes.len();
 
