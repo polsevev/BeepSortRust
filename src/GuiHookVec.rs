@@ -29,7 +29,8 @@ pub struct GuiVec{
     delay:f32,
     pub done:bool,
     renderSkip:i32,
-    skipped:i32
+    skipped:i32,
+    lastTouched:Vec<usize>,
 
 }
 #[async_trait]
@@ -82,7 +83,8 @@ impl SortingList for  GuiVec{
             delay, 
             done:false,
             renderSkip:1,
-            skipped:0
+            skipped:0,
+            lastTouched:Vec::with_capacity(2)
         }
     }
 
@@ -104,7 +106,11 @@ impl SortingList for  GuiVec{
                 clear_background(WHITE);
 
                 for (count,bar) in  self.list.iter().enumerate(){
-                    draw_rectangle(screen_width() * ((count as f32)/(self.initialSize as f32)),screen_height() - (screen_height()/((self.len()) as f32))*bar.position as f32 , screen_width()/((self.len()) as f32), (screen_height()/((self.len()) as f32))*bar.position as f32, bar.color);
+                    let mut color = bar.color;
+                    if  self.lastTouched.contains(&count){
+                        color = BLACK;
+                    }
+                    draw_rectangle(screen_width() * ((count as f32)/(self.initialSize as f32)),screen_height() - (screen_height()/((self.len()) as f32))*bar.position as f32 , screen_width()/((self.len()) as f32), (screen_height()/((self.len()) as f32))*bar.position as f32, color);
                     
                 }
     
@@ -162,7 +168,11 @@ impl SortingList for  GuiVec{
         self.writes += 2;
         self.reads += 2;
         self.list.swap(index1, index2);
+        self.lastTouched.clear();
+        self.lastTouched.push(index1);
+        self.lastTouched.push(index2);
         self.draw().await;
+
         self.done
     }
     fn randomize(&mut self){
@@ -175,7 +185,10 @@ impl SortingList for  GuiVec{
 
     fn get(&mut self, i:usize)-> &Bar{
         self.reads += 1;
+        self.lastTouched.clear();
+        self.lastTouched.push(i);
         self.list.get(i).unwrap()
+
     }
     fn lessThan(&mut self, a:usize, b:usize) -> bool{
         self.comps += 1;
@@ -203,6 +216,8 @@ impl SortingList for  GuiVec{
         self.reads += 1;
         self.list[i] = elem;
         self.draw().await;
+        self.lastTouched.clear();
+        self.lastTouched.push(i);
         self.done
     
     }
@@ -283,6 +298,7 @@ impl SortingList for  NonGuiVec{
 
         self.list[i] = elem;
         self.draw().await;
+
         false
     
     }
