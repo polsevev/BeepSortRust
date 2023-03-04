@@ -68,6 +68,7 @@ impl SortingList for  GuiVec{
         let colorStep = 360./length as f32;
         let mut list:Vec<Bar> = vec!();
         let freqStep = 50. + ((2000.-50.)/length as f32);
+
         for i in 1..length+1 {
             let frequency = i as f32 * freqStep;
             list.push(Bar::new(i, (colorStep*i as f32)/360., frequency).await);
