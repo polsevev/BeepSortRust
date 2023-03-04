@@ -14,11 +14,21 @@ use crate::GuiHookVec::SortingList;
 
 #[derive(Debug, Clone)]
 pub struct Algorithm{
-
+    algorithms:Vec<String>
 }
 
 impl Algorithm{
-
+    pub fn new() -> Self{
+        Algorithm { algorithms: vec![
+            "insertSort".to_string(),
+            "bubbleSort".to_string(),
+            "bogoSort".to_string(),
+            "cocktailShaker".to_string(),
+            "binaryHeap".to_string(),
+            "quickSort".to_string(),
+            "radixSort".to_string(),
+            ] }
+    }
     pub async fn run(length:usize, delay:f32, functionName:String){
         let mut list:GuiVec = SortingList::new(length, delay);
         list.randomize();
@@ -40,6 +50,10 @@ impl Algorithm{
         if !list.done{
             list.show().await
         }
+    }
+
+    pub fn getAlgorithms(&self) -> &Vec<String>{
+        &self.algorithms
     }
 
 
