@@ -46,7 +46,7 @@ use super::*;
 
   #[test]
   fn coctailshakersort_correct() {
-    let mut list:NonGuiVec = SortingList::new(1000,0.0);
+    let mut list:NonGuiVec = aw!(SortingList::new(1000,0.0));
     aw!(cocktailShaker(&mut list));
     assert_eq!( list.isSorted(), true);
   }

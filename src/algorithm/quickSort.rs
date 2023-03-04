@@ -62,7 +62,7 @@ use super::*;
 
   #[test]
   fn quicksort_correct() {
-    let mut list:NonGuiVec = SortingList::new(1000,0.0);
+    let mut list:NonGuiVec = aw!(SortingList::new(1000,0.0));
     aw!(quickSort(&mut list));
     assert_eq!( list.isSorted(), true);
   }

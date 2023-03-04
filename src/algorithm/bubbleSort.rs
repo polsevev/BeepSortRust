@@ -27,7 +27,7 @@ use super::*;
 
   #[test]
   fn bubblesort_correct() {
-    let mut list:NonGuiVec = SortingList::new(1000,0.0);
+    let mut list:NonGuiVec = aw!(SortingList::new(1000,0.0));
     aw!(bubbleSort(&mut list));
     assert_eq!( list.isSorted(), true);
   }

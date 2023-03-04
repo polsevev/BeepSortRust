@@ -26,7 +26,7 @@ use super::*;
 
   #[test]
   fn insertsort_correct() {
-    let mut list:NonGuiVec = SortingList::new(1000,0.0);
+    let mut list:NonGuiVec = aw!(SortingList::new(1000,0.0));
     aw!(insertSort(&mut list));
     assert_eq!( list.isSorted(), true);
   }

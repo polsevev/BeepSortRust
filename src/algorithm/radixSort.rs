@@ -98,7 +98,7 @@ use super::*;
 
   #[test]
   fn radixsort_correct() {
-    let mut list:NonGuiVec = SortingList::new(1000,0.0);
+    let mut list:NonGuiVec = aw!(SortingList::new(1000,0.0));
     aw!(radixSort(&mut list));
     assert_eq!( list.isSorted(), true);
   }

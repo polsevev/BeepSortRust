@@ -26,7 +26,7 @@ use super::*;
 
   #[test]
   fn bogoSort_correct_this_is_a_meme() {
-    let mut list:NonGuiVec = SortingList::new(5,0.0);
+    let mut list:NonGuiVec = aw!(SortingList::new(5,0.0));
     aw!(bogoSort(&mut list));
     assert_eq!( list.isSorted(), true);
   }

@@ -1,6 +1,7 @@
 
 
 use async_trait::async_trait;
+use macroquad::audio::{play_sound_once, Sound};
 use macroquad::color::{BROWN, WHITE};
 use macroquad::{hash, time};
 use macroquad::prelude::{clear_background, Vec2, BLACK};
@@ -11,6 +12,7 @@ use macroquad::time::{get_frame_time, get_fps};
 use macroquad::ui::root_ui;
 use macroquad::window::{next_frame, screen_height, screen_width};
 use crate::BarPlugin::Bar;
+use crate::soundGenerator;
 
 
 
@@ -29,7 +31,8 @@ pub struct GuiVec{
     renderSkip:i32,
     skipped:i32,
     lastTouched:Vec<usize>,
-    lastPlayed:f64
+    lastPlayed:f64,
+    sounds:Vec<Sound>
 }
 #[async_trait]
 pub trait SortingList{
@@ -71,8 +74,15 @@ impl SortingList for  GuiVec{
 
         for i in 1..length+1 {
             let frequency = i as f32 * freqStep;
-            list.push(Bar::new(i, (colorStep*i as f32)/360., frequency).await);
+            list.push(Bar::new(i, (colorStep*i as f32)/360.));
         }
+
+        //Generate sounds
+        let mut sounds = Vec::with_capacity(1000);
+        for i in (50..2100).step_by(2){
+            sounds.push(soundGenerator::generateTone(i as f32, 0.1).await);
+        }
+
         GuiVec{
             list, 
             initialSize:length as usize, 
@@ -87,6 +97,7 @@ impl SortingList for  GuiVec{
             skipped:0,
             lastTouched:Vec::with_capacity(2),
             lastPlayed:0.,
+            sounds,
         }
     }
 
@@ -168,7 +179,7 @@ impl SortingList for  GuiVec{
 
 
         if time::get_time() + 0.5 >= self.lastPlayed{
-            self.list[index1].playSound();
+            play_sound_once(self.sounds[ (self.list[index1].position * 1000 / self.list.len()) ]);
             self.lastPlayed = time::get_time()+0.5;
         }
 
@@ -251,7 +262,7 @@ impl SortingList for  NonGuiVec{
     async fn new(length:usize, delay:f32) -> Self{
         let mut list = Vec::new();
         for i in 0..(length as usize){
-            list.push(Bar::new(i, i as f32, 0.0).await)
+            list.push(Bar::new(i, i as f32))
         }
         NonGuiVec { list: list }
     }   
