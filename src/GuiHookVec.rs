@@ -34,7 +34,7 @@ pub struct GuiVec{
 #[async_trait]
 pub trait SortingList{
 
-    fn new(length:usize, delay:f32) -> Self;
+    async fn new(length:usize, delay:f32) -> Self;
 
     fn len(&self) -> usize;
 
@@ -64,11 +64,13 @@ pub trait SortingList{
 #[async_trait]
 impl SortingList for  GuiVec{
     
-    fn new(length:usize, delay:f32) -> Self {
+    async fn new(length:usize, delay:f32) -> Self {
         let colorStep = 360./length as f32;
         let mut list:Vec<Bar> = vec!();
+        let freqStep = 50. + ((2000.-50.)/length as f32);
         for i in 1..length+1 {
-            list.push(Bar::new(i, (colorStep*i as f32)/360.));
+            let frequency = i as f32 * freqStep;
+            list.push(Bar::new(i, (colorStep*i as f32)/360., frequency).await);
         }
         GuiVec{
             list, 
@@ -161,6 +163,8 @@ impl SortingList for  GuiVec{
         self.writes += 2;
         self.reads += 2;
         self.list.swap(index1, index2);
+        self.list[index1].playSound();
+        //self.list[index2].playSound();
         self.lastTouched.clear();
         self.lastTouched.push(index1);
         self.lastTouched.push(index2);
@@ -236,10 +240,10 @@ pub struct NonGuiVec{
 }
 #[async_trait]
 impl SortingList for  NonGuiVec{
-    fn new(length:usize, delay:f32) -> Self{
+    async fn new(length:usize, delay:f32) -> Self{
         let mut list = Vec::new();
         for i in 0..(length as usize){
-            list.push(Bar::new(i, i as f32))
+            list.push(Bar::new(i, i as f32, 0.0).await)
         }
         NonGuiVec { list: list }
     }   

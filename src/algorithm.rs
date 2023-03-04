@@ -32,7 +32,7 @@ impl Algorithm{
             ] }
     }
     pub async fn run(length:usize, delay:f32, functionName:String){
-        let mut list:GuiVec = SortingList::new(length, delay);
+        let mut list:GuiVec = SortingList::new(length, delay).await;
         list.randomize();
         
 
