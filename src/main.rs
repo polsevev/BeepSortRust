@@ -28,14 +28,17 @@ async fn main() {
             Err(_)=> {100}
         };
 
-        draw_text("Sorting!", screen_width()*0.3, screen_height()*0.1, 100.0, GREEN);
-        draw_text(format!("Length: {}", length.to_string()).as_str(), screen_width()*0.83, 30., 20.0, BLACK);
-        draw_text(&get_fps().to_string(), screen_width()*0.7, 30.0, 20.0, BLACK);
-        root_ui().window(hash!(), Vec2::new(screen_width()*0.01, 45.), Vec2::new(250., 50.), |ui|{
+        let mut centerX = screen_width()/2.0;
+
+
+        draw_text("Sorting!", centerX-170.0, screen_height()*0.1, 100.0, BLACK);
+        draw_text(&get_fps().to_string(), centerX + 300., 30.0, 20.0, BLACK);
+        root_ui().window(hash!(), Vec2::new(centerX - 150.0, 150.), Vec2::new(300., 45.), |ui|{
             ui.input_text(hash!(), "Delay (ms)", &mut delayText);
             ui.input_text(hash!(), "Length Of Array!", &mut lengthString);
         });
-        let mut algo = buttonDropDown.render(Vec2::new(screen_width()*0.01, 45.));
+ 
+        let mut algo = buttonDropDown.render();
         
         if algo != ""{
             algorithm::Algorithm::run(length, 1.0, algo.to_string()).await;

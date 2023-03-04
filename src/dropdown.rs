@@ -3,8 +3,6 @@ use macroquad::hash;
 use macroquad::{ui::root_ui, window::screen_width, prelude::Vec2};
 
 
-
-
 enum Status{
     Open,
     Closed
@@ -24,14 +22,14 @@ impl ButtonDropDown{
             status:Status::Closed
         }
     }
-
-    pub fn render(&mut self, location:Vec2) -> String{
+    
+    pub fn render(&mut self) -> String{
         let mut algo = "";
-
+        let location = Vec2::new((screen_width() / 2.) - 150., 200.);
         match self.status{
             
             Status::Open => {
-                let size = Vec2::new(250., (self.elements.len() as f32*25.0) + 20.0);
+                let size = Vec2::new(300., (self.elements.len() as f32*25.0) + 20.0);
                 root_ui().window(hash!(), location, size, |ui|{
                     let mut position = Vec2::new(10.0, 10.);
 
@@ -43,13 +41,10 @@ impl ButtonDropDown{
                         }
                         position.y += 25.0;
                     }
-
-
- 
                 });
             }
             Status::Closed => {
-                root_ui().window(hash!(), Vec2::new(screen_width()*0.01, 45.), Vec2::new(300., 50.), |ui|{
+                root_ui().window(hash!(), location, Vec2::new(300., 50.), |ui|{
                     let uppercasedSelected = format!("{}{}", self.selected[0..1].to_string().to_uppercase(), self.selected[1..self.selected.len()].to_string());
                     ui.label(Vec2::new(10.0, 0.0), format!("Curent chosen algorithm: {}", uppercasedSelected).as_str());
                     if ui.button(Vec2::new(10.0, 20.0), "Open Menu!"){
