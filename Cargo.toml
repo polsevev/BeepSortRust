@@ -9,6 +9,6 @@ edition = "2021"
 macroquad = "0.3.25"
 async-trait = "0.1.64"
 tokio-test = "*"
-
+async-recursion = "1.0.2"
 [profile.release]
 opt-level=3

@@ -35,7 +35,7 @@ pub struct GuiVec{
 #[async_trait]
 pub trait SortingList{
 
-    fn new(length:i32, delay:f32) -> Self;
+    fn new(length:usize, delay:f32) -> Self;
 
     fn len(&self) -> usize;
 
@@ -52,7 +52,7 @@ pub trait SortingList{
     fn lessThan(&mut self, a:usize, b:usize) -> bool;
 
 
-    fn lessThanEqual(&mut self, a:usize, b:i32) -> bool;
+    fn lessThanEqual(&mut self, a:usize, b:usize) -> bool;
 
     fn isSorted(&mut self) -> bool;
 
@@ -65,7 +65,7 @@ pub trait SortingList{
 #[async_trait]
 impl SortingList for  GuiVec{
     
-    fn new(length:i32, delay:f32) -> Self {
+    fn new(length:usize, delay:f32) -> Self {
         let colorStep = 360./length as f32;
         let mut list:Vec<Bar> = vec!();
         for i in 1..length+1 {
@@ -181,7 +181,7 @@ impl SortingList for  GuiVec{
         self.comps += 1;
         return self.get(a).position < self.get(b).position
     }
-    fn lessThanEqual(&mut self, a:usize, b:i32) -> bool{
+    fn lessThanEqual(&mut self, a:usize, b:usize) -> bool{
         self.comps += 1;
         return self.get(a).position <= b
     }
@@ -228,10 +228,10 @@ pub struct NonGuiVec{
 }
 #[async_trait]
 impl SortingList for  NonGuiVec{
-    fn new(length:i32, delay:f32) -> Self{
+    fn new(length:usize, delay:f32) -> Self{
         let mut list = Vec::new();
         for i in 0..(length as usize){
-            list.push(Bar::new(i as i32, i as f32))
+            list.push(Bar::new(i, i as f32))
         }
         NonGuiVec { list: list }
     }   
@@ -265,7 +265,7 @@ impl SortingList for  NonGuiVec{
 
         return self.get(a).position < self.get(b).position
     }
-    fn lessThanEqual(&mut self, a:usize, b:i32) -> bool{
+    fn lessThanEqual(&mut self, a:usize, b:usize) -> bool{
         return self.get(a).position <= b
     }
     fn isSorted(&mut self) -> bool{

@@ -19,7 +19,7 @@ pub struct Algorithm{
 
 impl Algorithm{
 
-    pub async fn run(length:i32, delay:f32, functionName:String){
+    pub async fn run(length:usize, delay:f32, functionName:String){
         let mut list:GuiVec = SortingList::new(length, delay);
         list.randomize();
         

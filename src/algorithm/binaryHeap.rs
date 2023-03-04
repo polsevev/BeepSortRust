@@ -4,8 +4,8 @@ use crate::GuiHookVec::SortingList;
 
 pub async fn binaryHeap(list:&mut impl SortingList){
 
-    let mut indexMap:HashMap<i32, usize> = HashMap::new();
-    let mut binHeap:BinaryHeap<i32> = BinaryHeap::new();
+    let mut indexMap:HashMap<usize, usize> = HashMap::new();
+    let mut binHeap:BinaryHeap<usize> = BinaryHeap::new();
 
     let mut ind = 0;
     for bar in list.elements(){

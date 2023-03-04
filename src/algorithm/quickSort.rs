@@ -31,7 +31,7 @@ pub async fn quickSort(list:&mut impl SortingList) {
 
 
 
-async fn partition(list:&mut impl SortingList, mut low:usize, mut high:usize, p:i32) -> i32{
+async fn partition(list:&mut impl SortingList, mut low:usize, mut high:usize, p:usize) -> i32{
     let mut pIndex = low;
 
     for i in low..high{

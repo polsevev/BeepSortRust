@@ -15,7 +15,7 @@ use macroquad::ui::root_ui;
 
 #[macroquad::main("BeepSort")]
 async fn main() {
-    let mut length = 1;
+    let mut length = 1_usize;
     let mut lengthString = "100".to_owned();
     let mut delay = 0.;
     let mut delayText = "1".to_owned();
@@ -29,7 +29,7 @@ async fn main() {
             Ok(a) => a/1000.,
             Err(error)=> {0.1}
         };
-        length = match lengthString.parse::<i32>(){
+        length = match lengthString.parse::<usize>(){
             Ok(a) => a,
             Err(error)=> {100}
         };
