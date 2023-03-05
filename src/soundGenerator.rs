@@ -1,6 +1,6 @@
 use std::{f32::consts::PI};
 
-use macroquad::{audio::{Sound, load_sound_from_bytes}, window::{next_frame, screen_width, screen_height, clear_background}, text::draw_text, prelude::{BLACK, WHITE}};
+use macroquad::{audio::{Sound, load_sound_from_bytes, play_sound_once}, window::{next_frame, screen_width, screen_height, clear_background}, text::draw_text, prelude::{BLACK, WHITE}};
 
 
 const CHUNK_ID:&str = "RIFF";
@@ -91,5 +91,63 @@ pub async fn generateTone(frequency: f32, duration:f32) -> Sound{
 
 
     let sound = load_sound_from_bytes(&soundFileBytes).await.expect("Failed to load");
+    play_sound_once(sound);
+    let frequency = 1200.0;
+    soundFileBytes.clear();
+
+    soundFileBytes.append(&mut CHUNK_ID.clone().as_bytes().to_vec());
+
+    soundFileBytes.append(&mut CHUNK_SIZE.clone().as_bytes().to_vec());
+
+    soundFileBytes.append(&mut FORMAT.clone().as_bytes().to_vec());
+
+    soundFileBytes.append(&mut SUBCHUNK_1_ID.clone().as_bytes().to_vec());
+
+    write_as_bytes(&mut soundFileBytes, SUBCHUNK_1_SIZE, 4);
+
+    write_as_bytes(&mut soundFileBytes, AUDIO_FORMAT, 2) ;
+
+    write_as_bytes(&mut soundFileBytes, NUM_CHANNELS, 2);
+
+    write_as_bytes(&mut soundFileBytes, SAMPLE_RATE, 4);
+    
+    write_as_bytes(&mut soundFileBytes, BYTE_RATE, 4);
+
+    write_as_bytes(&mut soundFileBytes, BLOACK_ALIGN, 2);
+    write_as_bytes(&mut soundFileBytes, BITS_PR_SAMPLE, 2);
+
+    soundFileBytes.append(&mut SUBCHUNK_2_ID.clone().as_bytes().to_vec());
+
+    soundFileBytes.append(&mut SUBCHUNK_2_SIZE.clone().as_bytes().to_vec());
+
+
+    let startAudio = soundFileBytes.len();
+
+    let mut collect = Vec::new();
+    for i in 0..((SAMPLE_RATE as f32 * duration) as usize){
+        let amplitude = 500. * f32::sin((i as f32 - 300.) / 1200.);
+        let value = f32::sin((2. * PI * (i as f32) *  (frequency as f32)) / SAMPLE_RATE as f32);
+        let channel = (amplitude  * value);
+
+        collect.push(channel);
+        soundFileBytes.append(&mut (channel as i16).to_le_bytes().to_vec());
+
+
+    }
+    let endAudio = soundFileBytes.len();
+
+
+    let mut holder = Vec::new();
+    write_as_bytes(&mut holder, endAudio-startAudio, 4);
+    for i in 0..4{
+        soundFileBytes[(startAudio-4)+i] = holder[i];
+    }
+    holder.clear();
+    write_as_bytes(&mut holder, 36+endAudio-startAudio, 4);
+
+    for i in 0..4{
+        soundFileBytes[4+i] = holder[i];
+    }
+    play_sound_once(sound);
     sound
 }

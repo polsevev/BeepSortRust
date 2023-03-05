@@ -31,7 +31,7 @@ async fn main() {
     let mut algorithm = algorithm::Algorithm::new();
     let mut buttonDropDown = ButtonDropDown::new(&algorithm.getAlgorithms());
 
-    let sound = soundGenerator::generateTone(50., 0.05).await;
+
 
     loop{
         clear_background(WHITE);

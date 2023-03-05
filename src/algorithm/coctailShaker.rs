@@ -8,7 +8,7 @@ pub async fn cocktailShaker(list:&mut impl SortingList){
         swapped = false;
         for i in lowerBound..upperBound {
             if list.lessThan(i+1, i) {
-                if list.swap(i+1, i).await {return};
+                if list.swap(i, i+1).await {return};
                 swapped = true;
             }
         }
