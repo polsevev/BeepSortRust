@@ -1,7 +1,7 @@
 
 
 use async_trait::async_trait;
-use macroquad::audio::{play_sound_once, Sound};
+use macroquad::audio::{play_sound_once, Sound, play_sound, PlaySoundParams};
 use macroquad::color::{BROWN, WHITE};
 use macroquad::{hash, time};
 use macroquad::prelude::{clear_background, Vec2, BLACK};
@@ -179,7 +179,10 @@ impl SortingList for  GuiVec{
 
 
         if time::get_time() + 0.05 >= self.lastPlayed{
-            play_sound_once(self.sounds[ (self.list[index1].position * 1000 / self.list.len()) ]);
+            play_sound(self.sounds[ (self.list[index1].position * 1000 / self.list.len()) ], PlaySoundParams{
+                looped:false,
+                volume:0.5
+            });
             self.lastPlayed = time::get_time()+0.05;
         }
 
