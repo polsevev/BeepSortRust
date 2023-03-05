@@ -237,7 +237,7 @@ impl SortingList for  GuiVec{
         if time::get_time() + 0.05 >= self.lastPlayed{
             play_sound(self.sounds[ (self.list[i].position * 1000 / self.list.len()) ], PlaySoundParams{
                 looped:false,
-                volume:0.5
+                volume:1.
             });
             self.lastPlayed = time::get_time()+0.05;
         }
