@@ -24,12 +24,6 @@ const SUBCHUNK_2_SIZE:&str = "----";
 
 const MAX_AMPLITUDE:usize = 32760;
 
-
-fn write_as_bytes(vec:&mut Vec<u8>, value:usize, byte_size:u8){
-    let mut bytes = value.to_le_bytes();
-    vec.append(&mut bytes[0..byte_size as usize].to_vec());
-}
-
 pub async fn generateTone(frequency: f32, duration:f32) -> Sound{
 
     // const CHUNK_ID:&str = "RIFF";
@@ -75,36 +69,34 @@ pub async fn generateTone(frequency: f32, duration:f32) -> Sound{
 
     let startAudio = soundFileBytes.len();
 
-    let mut collect = Vec::new();
+
     let lim = ((SAMPLE_RATE as f32 * duration) as usize);
     for i in 0..((SAMPLE_RATE as f32 * duration) as usize){
         let amplitude = 500. * f32::sin((i as f32 - 300.) / 1200.);
         let value = f32::sin((2. * PI * (i as f32) *  (frequency as f32)) / SAMPLE_RATE as f32);
         let channel = (amplitude  * if i+100 > lim {0.} else {value});
 
-        collect.push(channel);
-        soundFileBytes.append(&mut (channel as i16).to_le_bytes().to_vec());
+        for i in channel.to_le_bytes(){
+            soundFileBytes.push(i);
+        }
+  
 
 
     }
-    let endAudio = soundFileBytes.len();
+    let endAudio = soundFileBytes.len() as u32;
 
-
-    let mut holder = Vec::new();
-    write_as_bytes(&mut holder, endAudio-startAudio, 4);
-    for i in 0..4{
-        soundFileBytes[(startAudio-4)+i] = holder[i];
+    for (i, elem) in (endAudio-startAudio as u32).to_le_bytes().into_iter().enumerate(){
+        soundFileBytes[(startAudio-4)+i] = elem;
     }
-    holder.clear();
-    write_as_bytes(&mut holder, 36+endAudio-startAudio, 4);
 
-    for i in 0..4{
-        soundFileBytes[4+i] = holder[i];
+    
+
+    for (i, elem) in (36+endAudio-startAudio as u32).to_be_bytes().into_iter().enumerate(){
+        soundFileBytes[4+i] = elem;
     }
 
 
 
-    let sound = load_sound_from_bytes(&soundFileBytes).await.expect("Failed to load");
+    load_sound_from_bytes(&soundFileBytes).await.expect("Failed to load")
  
-    sound
 }
