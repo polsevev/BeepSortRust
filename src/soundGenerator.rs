@@ -76,10 +76,7 @@ pub async fn generateTone(frequency: f32, duration:f32) -> Sound{
         let value = f32::sin((2. * PI * (i as f32) *  (frequency as f32)) / SAMPLE_RATE as f32);
         let channel = (amplitude  * if i+100 > lim {0.} else {value});
 
-        for i in channel.to_le_bytes(){
-            soundFileBytes.push(i);
-        }
-  
+        soundFileBytes.append(&mut (channel as i16).to_le_bytes().to_vec());
 
 
     }
