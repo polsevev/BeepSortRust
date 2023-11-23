@@ -28,7 +28,7 @@ jobs:
           cp index.html transport/
           cp target/wasm32-unknown-unknown/release/BeepSortMacroQuad.d transport/
           cp target/wasm32-unknown-unknown/release/BeepSortMacroQuad.wasm transport/
-      -name: ls
+      - name: ls
         run: ls
       - name: rsync files
         uses: burnett01/rsync-deployments@5.2
