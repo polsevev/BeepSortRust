@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
       - name: Install latest stable
@@ -28,6 +28,8 @@ jobs:
           cp index.html transport/
           cp target/wasm32-unknown-unknown/release/BeepSortMacroQuad.d transport/
           cp target/wasm32-unknown-unknown/release/BeepSortMacroQuad.wasm transport/
+      - name: ls
+        run: ls
       - name: rsync files
         uses: burnett01/rsync-deployments@5.2
         with:
