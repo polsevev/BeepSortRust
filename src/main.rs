@@ -44,7 +44,7 @@ async fn main() {
         let mut centerX = screen_width()/2.0;
 
 
-        draw_text("Sorting!", centerX-170.0, screen_height()*0.1, 100.0, BLACK);
+        draw_text("Sorting! Made by Polsevev", centerX-170.0, screen_height()*0.1, 100.0, BLACK);
         draw_text(&get_fps().to_string(), centerX + 300., 30.0, 20.0, BLACK);
         root_ui().window(hash!(), Vec2::new(centerX - 150.0, 150.), Vec2::new(300., 45.), |ui|{
             ui.input_text(hash!(), "Delay (ms)", &mut delayText);
