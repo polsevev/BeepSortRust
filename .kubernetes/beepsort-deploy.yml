@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: beepsort
+  namespace: beepsort
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beepsort
+  template: 
+    metadata:
+      labels:
+        app: beepsort
+        name: beepsort
+    spec:
+      containers:
+      - name: beepsort
+        image: registry.lan.polsevev.dev/beepsort:v0.1.1
+        ports:
+        - containerPort: 80

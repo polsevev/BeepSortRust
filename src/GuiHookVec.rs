@@ -4,18 +4,18 @@ use async_trait::async_trait;
 #[derive(Clone, Debug)]
 pub struct GuiVec {
     pub list: Vec<Bar>,
-    initialSize: usize,
-    pub lastTime: f64,
-    pub reads: i32,
-    pub writes: i32,
-    pub comps: i32,
-    isPaused: bool,
-    delay: f32,
-    pub done: bool,
-    renderSkip: i32,
-    skipped: i32,
-    lastTouched: Vec<usize>,
-    lastPlayed: f64,
+    initialSize:usize,
+    pub lastTime:f64,
+    pub reads:i32,
+    pub writes:i32,
+    pub comps:i32,
+    isPaused:bool,
+    delay:f32,
+    pub done:bool,
+    renderSkip:i32,
+    skipped:i32,
+    lastTouched:Vec<usize>,
+    lastPlayed:f64,
 }
 #[async_trait]
 pub trait SortingList {
@@ -57,6 +57,7 @@ impl SortingList for GuiVec {
             list.push(Bar::new(i, (colorStep * i as f32) / 360.));
         }
 
+<<<<<<< HEAD
         //Generate sounds
         GuiVec {
             list,
@@ -72,6 +73,24 @@ impl SortingList for GuiVec {
             skipped: 0,
             lastTouched: Vec::with_capacity(2),
             lastPlayed: 0.,
+=======
+
+
+        GuiVec{
+            list, 
+            initialSize:length as usize, 
+            lastTime: 0.0 ,  
+            reads:0, 
+            writes:0, 
+            comps:0, 
+            isPaused:false, 
+            delay, 
+            done:false,
+            renderSkip:1,
+            skipped:0,
+            lastTouched:Vec::with_capacity(2),
+            lastPlayed:0.,
+>>>>>>> master
         }
     }
 
@@ -86,6 +105,12 @@ impl SortingList for GuiVec {
         self.reads += 2;
         self.list.swap(index1, index2);
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> master
         self.lastTouched.clear();
         self.lastTouched.push(index1);
         self.lastTouched.push(index2);
@@ -130,7 +155,14 @@ impl SortingList for GuiVec {
         self.reads += 1;
         self.list[i] = elem;
         self.draw().await;
+<<<<<<< HEAD
 
+=======
+        if time::get_time() + 0.1 >= self.lastPlayed{
+
+            self.lastPlayed = time::get_time()+0.1;
+        }
+>>>>>>> master
         self.lastTouched.clear();
         self.lastTouched.push(i);
         self.done
