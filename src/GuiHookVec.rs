@@ -32,7 +32,6 @@ pub struct GuiVec{
     skipped:i32,
     lastTouched:Vec<usize>,
     lastPlayed:f64,
-    sounds:Vec<Sound>
 }
 #[async_trait]
 pub trait SortingList{
@@ -77,11 +76,7 @@ impl SortingList for  GuiVec{
             list.push(Bar::new(i, (colorStep*i as f32)/360.));
         }
 
-        //Generate sounds
-        let mut sounds = Vec::with_capacity(1000);
-        for i in (50..2051).step_by(2){
-            sounds.push(soundGenerator::generateTone(i as f32, 0.1).await);
-        }
+
 
         GuiVec{
             list, 
@@ -97,7 +92,6 @@ impl SortingList for  GuiVec{
             skipped:0,
             lastTouched:Vec::with_capacity(2),
             lastPlayed:0.,
-            sounds,
         }
     }
 
@@ -178,13 +172,7 @@ impl SortingList for  GuiVec{
         self.list.swap(index1, index2);
 
 
-        if time::get_time() + 0.1 >= self.lastPlayed{
-            play_sound(self.sounds[ (self.list[index1].position * 1000 / self.list.len()) ], PlaySoundParams{
-                looped:false,
-                volume:0.5
-            });
-            self.lastPlayed = time::get_time()+0.1;
-        }
+
 
         self.lastTouched.clear();
         self.lastTouched.push(index1);
@@ -235,10 +223,7 @@ impl SortingList for  GuiVec{
         self.list[i] = elem;
         self.draw().await;
         if time::get_time() + 0.1 >= self.lastPlayed{
-            play_sound(self.sounds[ (self.list[i].position * 1000 / self.list.len()) ], PlaySoundParams{
-                looped:false,
-                volume:1.
-            });
+
             self.lastPlayed = time::get_time()+0.1;
         }
         self.lastTouched.clear();

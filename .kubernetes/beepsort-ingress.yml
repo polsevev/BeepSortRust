@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata: 
+  name: beepsort-ingress
+  namespace: beepsort
+spec: 
+  rules:
+  - host: "beepsort.polsevev.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: beepsort-service
+            port: 
+              number: 99
+  tls:
+  - hosts:
+      - beepsort.polsevev.dev
+    secretName: beepsort-cert
