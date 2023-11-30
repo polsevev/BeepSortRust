@@ -63,7 +63,7 @@ fn update(state: &mut State) {
 
 fn draw(gfx: &mut Graphics, state: &mut State) {
     let mut draw = gfx.create_draw();
-
+    
     draw.clear(Color::BLACK);
 
     let text = if state.next.is_some() {
@@ -71,12 +71,11 @@ fn draw(gfx: &mut Graphics, state: &mut State) {
     } else {
         String::new()
     };
-    draw.text(&state.font, &text)
-        .position(100., 100.)
-        .size(60.)
-        .color(Color::WHITE)
-        .h_align_center()
-        .v_align_middle();
+
 
     gfx.render(&draw);
+}
+
+fn drawArr(draw: &mut Draw, screen_width: u32, screen_height: u32){
+    draw.rect(, size)
 }
